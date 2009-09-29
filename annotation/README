@@ -1,0 +1,41 @@
+
+awk '{print $1}' /Volumes/"ILYA LAB"/Vesteinn/data/GeneOntology/TranscriptionFactorActivity.tsv > tempfile 
+~/bin/AddStringToLines.py tempfile "_at" > TranscriptionFactorActivity.probesets
+
+awk '{print $1}' /Volumes/"ILYA LAB"/Vesteinn/data/GeneOntology/CytokineActivity.tsv > tempfile 
+~/bin/AddStringToLines.py tempfile "_at" > CytokineActivity.probesets
+
+awk '{print $1}' /Volumes/"ILYA LAB"/Vesteinn/data/GeneOntology/CytokineBinding.tsv > tempfile 
+~/bin/AddStringToLines.py tempfile "_at" > CytokineBinding.probesets
+
+awk '{print $1}' /Volumes/"ILYA LAB"/Vesteinn/data/GeneOntology/ExtracellularRegion.tsv > tempfile 
+~/bin/AddStringToLines.py tempfile "_at" > ExtracellularRegion.probesets
+
+
+
+
+
+~/bin/keepRows.py Data_Matrix.tsv TranscriptionFactorActivity.probesets > TranscriptionFactorActivity.dm.tsv
+
+
+~/bin/keepRows.py Data_Matrix.tsv CytokineActivity.probesets > CytokineActivity.dm.tsv
+
+~/bin/keepRows.py Data_Matrix.tsv CytokineBinding.probesets > CytokineBinding.dm.tsv
+
+~/bin/keepRows.py Data_Matrix.tsv ExtracellularRegion.probesets > ExtracellularRegion.dm.tsv
+
+~/bin/union.csh CytokineActivity.probesets ExtracellularRegion.probesets > Cytokine.probesets
+
+~/bin/union.csh CytokineActivity.probesets ExtracellularRegion.probesets > Cytokine.probesets
+
+clean header
+
+cat CytokineActivity.probesets CytokineBinding.probesets TranscriptionFactorActivity.probesets > foi.probesets
+
+## foi = functions of interest ?!
+ 
+~/bin/keepRows.py Data_Matrix.tsv foi.probesets > foi.dm.tsv
+
+~/bin/keepRows.py expression_set.tsv foi.probesets  > foi.es.tsv
+
+~/bin/keepRows.py probe_intensity_repCombined.MADs.tsv foi.probesets  > foi.mad.tsv
