@@ -8,10 +8,14 @@ source(paste(util.dir,"httpget.R",sep="/"))
 source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 source(paste(util.dir,"utilitiesSampleGroup.R",sep="/"))
 
-##the period from March 1, 2009 - August 30, 2009 (Not sure about this!)
-## format m/d/y
-startDate <- "3/1/09"
-endDate <- "8/30/09"
+timefilter <- FALSE 
+
+if ( timefilter ){
+  ##the period from March 1, 2009 - August 30, 2009 (Not sure about this!)
+  ## format m/d/y
+  startDate <- "3/1/09"
+  endDate <- "8/30/09"
+}
 
 term.array="/sampleData/microarray/chips/Mouse Exon"
 
@@ -53,15 +57,19 @@ obj.1 <- searchByNameValue(termListHttpForm(termlist))
 ##length(obj.1) is 538 on 5-14-09 for exon arrays
 ##length(obj.1) is 600 on 7-24-09 for exon arrays
 ##length(obj.1) is 648 on 8-30-09 for exon arrays
-##length(obj.1) is 672 on 9-28-09 for exon arrays
+##length(obj.1) is 672 on 9-30-09 for exon arrays
 
-## Filter by time if desired
-obj <- filterArrayListByDate(obj.1,startDate,endDate)
-
-cat(strsplit(term.array,split="/")[[1]][5],"\n")
-cat("Start date:",startDate,"End date:",endDate,"\n")
-cat("Before time range filtering:",length(obj.1),"\n")
-cat("After time range filtering:",length(obj),"\n")
+if ( timefilter ){
+  ## Filter by time if desired
+  obj <- filterArrayListByDate(obj.1,startDate,endDate)
+  cat(strsplit(term.array,split="/")[[1]][5],"\n")
+  cat("Start date:",startDate,"End date:",endDate,"\n")
+  cat("Before time range filtering:",length(obj.1),"\n")
+  cat("After time range filtering:",length(obj),"\n")  
+} else {  
+  ## or not
+  obj <- obj.1
+}
 
 all.cell.types <- unique(unlist(lapply(obj,"[[","Cell Type")))
 all.times <- sort(unique(unlist(lapply(obj,"[[","Time 1"))))
@@ -69,7 +77,7 @@ all.times <- all.times[sort(as.numeric(all.times),index.return=TRUE)$ix]
 ## last one as the string sort can fail
 
 ## Cell type for all samples
-## 60 samples with no cell type
+## 62 samples with no cell type
 all.cell.type <- as.character(lapply(obj,"[[","Cell Type"))
 cell.type.null <- which(as.character(lapply(obj,"[[","Cell Type"))=="NULL")
 unlist(lapply(obj[cell.type.null],"[[","name"))
@@ -86,21 +94,21 @@ time1.null <- which(as.character(lapply(obj,"[[","Time 1"))=="NULL")
 all.stim1 <- as.character(lapply(obj,"[[","Stimulus 1"))
 
 baddies <- which(all.cell.type =="NULL" | all.stim1 == "NULL" | all.cell.type == "NULL" )
-## 84 are missing one of the above attributes
-## In fact, these 84 are all missing stim1 and time1
+## 105 are missing one of the above attributes
 
-## 24 with cell type but not Time1, Stim1
-inds.24 <- which(all.cell.type!="NULL" & all.stim1=="NULL")
+## 43 with cell type but not Time1, Stim1
+length(which(all.cell.type!="NULL" & all.stim1=="NULL"))
 ## These all seem like "unstim", for a variety of strains
 ## They do not have "Stim 1==Unstim" 
 
-## 451 have Strain,Stimulus 1, Time 1
+length(which(all.cell.type !="NULL" & all.stim1 != "NULL" & all.cell.type != "NULL" )
+)
 
-
- 
+## 567 have Strain,Stimulus 1, Time 1
 ## 410, excluding double stims
 ## 451, with double stims (41 double stim *samples* ) 
 
+## 52 doubles by this count
 inds.dbls <- which(as.character(lapply(obj,"[[","Stimulus 2")) !=  "NULL" )
  
 doobles <- cbind(
@@ -137,7 +145,9 @@ for ( cell.type in all.cell.types ){
   objj <- searchByNameValue(termListHttpForm(termlist))
 
   ## Filter by time if desired
-  objj <- filterArrayListByDate(objj,startDate,endDate)  
+  if ( timefilter ){
+    objj <- filterArrayListByDate(objj,startDate,endDate)  
+  }
   
   ## Ditch samples with Stim2 for now
   ##objj <- removeStim2(objj) 
