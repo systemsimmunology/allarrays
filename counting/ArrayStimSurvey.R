@@ -26,7 +26,6 @@ term.array="/sampleData/microarray/chips/Mouse Exon"
 ##term.array="/sampleData/microarray/chips/Mouse Promoter 1.0R"
 
 ### First version: Agnostic to Project
-
 ### Get all arrays ?
 
 ### Find all unique combinations of
@@ -69,18 +68,22 @@ if ( timefilter ){
 } else {  
   ## or not
   obj <- obj.1
+  cat("Total arrays by specified array type:",length(obj),"\n")  
 }
 
 all.cell.types <- unique(unlist(lapply(obj,"[[","Cell Type")))
+cat("All Cell Types:",paste(all.cell.types,collapse=", "),"\n")  
 all.times <- sort(unique(unlist(lapply(obj,"[[","Time 1"))))
 all.times <- all.times[sort(as.numeric(all.times),index.return=TRUE)$ix]
 ## last one as the string sort can fail
+
 
 ## Cell type for all samples
 ## 62 samples with no cell type
 all.cell.type <- as.character(lapply(obj,"[[","Cell Type"))
 cell.type.null <- which(as.character(lapply(obj,"[[","Cell Type"))=="NULL")
-unlist(lapply(obj[cell.type.null],"[[","name"))
+## unlist(lapply(obj[cell.type.null],"[[","name")) ## names of the arrays with no cell type
+cat("Arrays with no Cell Type:",length(cell.type.null),"\n")
 ## Lack ofo metadata, including Investigator
 ## Seems Thunder data is here!
 ## The others might be VL's titration experiments
@@ -95,19 +98,17 @@ all.stim1 <- as.character(lapply(obj,"[[","Stimulus 1"))
 
 baddies <- which(all.cell.type =="NULL" | all.stim1 == "NULL" | all.cell.type == "NULL" )
 ## 105 are missing one of the above attributes
+cat("Arrays missing either Cell Type, Strain, Stimulus 1:",length(baddies),"\n")
 
 ## 43 with cell type but not Time1, Stim1
-length(which(all.cell.type!="NULL" & all.stim1=="NULL"))
+## length(which(all.cell.type!="NULL" & all.stim1=="NULL"))
 ## These all seem like "unstim", for a variety of strains
 ## They do not have "Stim 1==Unstim" 
 
-length(which(all.cell.type !="NULL" & all.stim1 != "NULL" & all.cell.type != "NULL" )
-)
+cat("Arrays with Cell Type, Strain, Stimulus 1:",length(which(all.cell.type !="NULL" & all.stim1 != "NULL" & all.cell.type != "NULL")),"\n")
 
 ## 567 have Strain,Stimulus 1, Time 1
-## 410, excluding double stims
-## 451, with double stims (41 double stim *samples* ) 
-
+## 515, excluding double stims
 ## 52 doubles by this count
 inds.dbls <- which(as.character(lapply(obj,"[[","Stimulus 2")) !=  "NULL" )
  
