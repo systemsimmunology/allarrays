@@ -15,9 +15,13 @@ searchByNameValue <- function( termlistHttpForm ){
                       "PROJECTION=Investigator",
                       termlistHttpForm,
                       sep="&");
-
-  ## Port 9080
-  response = simplePostToHost("innate-immunity.systemsbiology.net", "/addama-rest/primary-repo/search", datatosend, referer="", port=9080);
+  
+  sstring <- whiteSpaceURLform(paste("/addama-rest/primary-repo/search?",datatosend,sep=""))
+  response <-  http.get("innate-immunity.systemsbiology.net",sstring,port=9080)
+  
+  ## 
+  ## Last working, but slow version
+  ##response = simplePostToHost("innate-immunity.systemsbiology.net", "/addama-rest/primary-repo/search", datatosend, referer="", port=9080);
   ## Port 80:Believe this version is preferable and general
   ##response = simplePostToHost("innate-immunity.systemsbiology.net", "/addama-rest/primary-repo/search", datatosend, referer="", port=80);
   ## Improvement pending
