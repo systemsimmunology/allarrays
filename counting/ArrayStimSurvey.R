@@ -9,6 +9,7 @@ source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 source(paste(util.dir,"utilitiesSampleGroup.R",sep="/"))
 
 timefilter <- FALSE 
+debug <- TRUE
 
 if ( timefilter ){
   ##the period from March 1, 2009 - August 30, 2009 (Not sure about this!)
@@ -144,14 +145,27 @@ for ( cell.type in all.cell.types ){
   termlist[[2]] <- term.ct
 
   objj <- searchByNameValue(termListHttpForm(termlist))
-
+  ## Can include samples with No Stimulus 1 , Time 1
+  
   ## Filter by time if desired
   if ( timefilter ){
     objj <- filterArrayListByDate(objj,startDate,endDate)  
   }
   
-  ## Ditch samples with Stim2 for now
-  ##objj <- removeStim2(objj) 
+  ## Hopefully this filter can be ditched some day
+  ## Addama is return matches by substring for Cell Type
+  baddies <- which(unlist(lapply(objj,"[[","Cell Type")) != cell.type)
+  if ( length(baddies) > 0 ){
+    objj <- objj[-baddies]
+  }
+  
+  if ( debug ){
+    cat("***",cell.type,"***\n")
+    b2 <- unlist(lapply(obj.1[which(all.cell.type ==cell.type & all.stim1 != "NULL" & all.cell.type != "NULL")],"[[","name"))
+    cat("length from big query, filtered on cell type",length(b2),"\n")  
+    cat("length before filtering",length(objj),"\n")
+  }
+  
   ## For clean indexing operations below, remove the nulls
   time1.null <- which(as.character(lapply(objj,"[[","Time 1"))=="NULL")
   if ( length(time1.null) > 0){
@@ -165,9 +179,13 @@ for ( cell.type in all.cell.types ){
   if ( length(strain.null) > 0){
     objj <- objj[-strain.null]
   }
-    
+  if ( debug ) { cat("after removing nulls",length(objj),"\n") }
+
+  ## Ditch samples with Stim2 for now
+  objj <- removeStim2(objj)
+  if ( debug ) { cat("after removing doubles",length(objj),"\n") }
+
   stim1s <- unique(unlist(lapply(objj,"[[","Stimulus 1")))
-  
   for ( stim1 in stim1s ){
     inds <- which(unlist(lapply(objj,"[[","Stimulus 1"))==stim1)
     objjj <- objj[inds] ## now has unique cell type and stim

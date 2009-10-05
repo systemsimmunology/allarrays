@@ -24,7 +24,7 @@ parseSampleGroup <- function ( sampleGroup ){
 }
 
 ## Remove Stim2 Sample Groups
-removeStim2 <- function ( sglist.in ){
+removeStim2SG <- function ( sglist.in ){
   ## These include the string "NULL"
   sg.stim2 <- as.character(lapply(sglist.in,"[[","Stimulus 2"))
   have.stim2 <- which(sg.stim2 != "NULL")
