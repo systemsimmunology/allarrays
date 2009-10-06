@@ -9,7 +9,7 @@ source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 source(paste(util.dir,"utilitiesSampleGroup.R",sep="/"))
 
 timefilter <- FALSE 
-debug <- TRUE
+debug <- FALSE
 
 if ( timefilter ){
   ##the period from March 1, 2009 - August 30, 2009 (Not sure about this!)
@@ -72,6 +72,7 @@ if ( timefilter ){
   cat("Total arrays by specified array type:",length(obj),"\n")  
 }
 
+
 all.cell.types <- unique(unlist(lapply(obj,"[[","Cell Type")))
 cat("All Cell Types:",paste(all.cell.types,collapse=", "),"\n")  
 all.times <- sort(unique(unlist(lapply(obj,"[[","Time 1"))))
@@ -106,7 +107,7 @@ cat("Arrays missing either Cell Type, Strain, Stimulus 1:",length(baddies),"\n")
 ## These all seem like "unstim", for a variety of strains
 ## They do not have "Stim 1==Unstim" 
 
-cat("Arrays with Cell Type, Strain, Stimulus 1:",length(which(all.cell.type !="NULL" & all.stim1 != "NULL" & all.cell.type != "NULL")),"\n")
+cat("Arrays with Cell Type, Strain, Stimulus 1 (may have Stimulus 2):",length(which(all.cell.type !="NULL" & all.stim1 != "NULL" & all.cell.type != "NULL")),"\n")
 
 ## 567 have Strain,Stimulus 1, Time 1
 ## 515, excluding double stims
@@ -121,6 +122,8 @@ doobles <- cbind(
                  unlist(lapply(obj[inds.dbls],"[[","Stimulus 2")),
                  unlist(lapply(obj[inds.dbls],"[[","Time 2"))
                  )
+cat("Unique Metadata with Stimulus 2:", nrow(doobles),"\n")
+
 ## Various ways to organize these
 ## Need to account for Stim1/Stim2 labeling arbitrarity
 ## In most cases, time1=time2 (sampling time)
@@ -209,7 +212,9 @@ for ( cell.type in all.cell.types ){
   }
 }
 rownames(timetallyMat) <- NULL
- 
+
+cat("No of. time courses (no Stimulus 2):", nrow(metadataMat), "\n")
+
 tt2 <- cbind(timetallyMat,apply(timetallyMat,1,sum))
 tt3 <- rbind(tt2,apply(tt2,2,sum))
 
@@ -221,7 +226,7 @@ rownames(outMat) <- NULL
 colnames(outMat) <- NULL
 write.table(outMat,file="AllMetaData.tsv",sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
 
-cat("Have Cell Type,Strain, Stimulus 1:",sum(timetallyMat),"\n")
+cat("Have Cell Type,Strain, Stimulus 1 (no Stimulus 2):",sum(timetallyMat),"\n")
 
 outMat <- rbind(c("Cell Type","Strain","Stimulus 1","Time 1","Stimulus 2","Time 2"),doobles)
 write.table(outMat,file="Doubles.tsv",sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
