@@ -26,9 +26,13 @@ mm <-cbind(mm.3prime,mm.exon)
 save(mm,file=paste(pdata.dir,"mm.RData",sep="/"))
 
 n.expressed.conds <- apply(mm,1,sum)
-genes.not.expressed <- eids[which( n.expressed.conds == 0 )]
-genes.always.expressed <- eids[which( n.expressed.conds == length(CSSs.tc) )]
+genes.not.expressed <- names(which( n.expressed.conds == 0 ))
+genes.always.expressed <- names(which( n.expressed.conds == length(CSSs.tc) ))
+variable.genes <- setdiff(rownames(mm),union(genes.not.expressed,genes.always.expressed))
+
 n.expressed.genes <- apply(mm,2,sum)
+blank.conditions <- names(which(n.expressed.genes==0))
+
 
 ###
 ### Functional groups
@@ -42,7 +46,7 @@ tfa <-  as.character(read.table(paste(go.dir,"TranscriptionFactorActivity.tsv",s
 
 ## Intersecting extcell with ca seems to have little effect now
 ## Just skip it
-eids <- intersect(ca,eids.on.both)
+eids <- intersect(ca,variable.genes)
 
 ## requires mm
 ncbi.dir <- file.path(Sys.getenv("DATA_DIR"),"ncbi")

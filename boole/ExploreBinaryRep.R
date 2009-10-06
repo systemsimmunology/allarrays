@@ -1,4 +1,14 @@
 
+util.dir <- file.path(Sys.getenv("AA"),"utils")
+pdata.dir <- file.path(Sys.getenv("AA"),"processed_data") 
+load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.symbol.RData",sep="/"))
+
+load(paste(pdata.dir,"mm.RData",sep="/"))
+load(paste(pdata.dir,"CSSs.tc.RData",sep="/"))
+
+eids <- intersect(ca,variable.genes)
+blank.conds <- names(which(apply(mm[eids,],2,sum)==0))
+var.conds <- names(which(apply(mm[eids,],2,sum)!=0))
 
 genes.for.plot <- setdiff(eids,union(genes.not.expressed,genes.always.expressed))
 heatmap(t(mm[genes.for.plot,]),scale="none",margins=c(15,15),cexCol=0.9,cexRow=1.2,labCol=gsym[genes.for.plot])
@@ -22,3 +32,9 @@ for ( csst in CSSs.tc.exon ){
 
 genes.for.plot <- setdiff(eids, genes.not.expressed )
 heatmap(t(log(maxes[genes.for.plot,])),scale="none",margins=c(15,15),cexCol=0.9,cexRow=1.2,labCol=gsym[genes.for.plot])
+
+
+## Explore classes
+
+
+table(unlist(lapply(CSSs.tc,"[[","Strain"))
