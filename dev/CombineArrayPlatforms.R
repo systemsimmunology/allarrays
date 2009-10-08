@@ -1,7 +1,7 @@
 ##
 ## Load and combine 3'prime arrays and exon arrays into single summary matrix and CSSs
 ##
-
+##
 util.dir <- file.path(Sys.getenv("AA"),"utils")
 ncbi.dir <- file.path(Sys.getenv("DATA_DIR"),"ncbi")
 data.dir <- file.path(Sys.getenv("AA"),"data") # local repository for "raw" data
@@ -35,9 +35,6 @@ dm.exon <- dm
 
 load(paste(data.dir,"dm.3prime.allarrays.RData",sep="/"))
 dm.3prime <- dm; rm(dm) 
-
-##load("data/dm.3prime.released.RData")
-##dm.3prime <- ag; rm(ag) # called ag in older files
 
 load(paste(data.dir,"dm.exon.RData",sep="/"))
 dm.exon <- dm
