@@ -13,8 +13,13 @@ sg.path <- ca[5]
 data.path <- "."
 
 ##test values
+##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09"
+##sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09/output/Mouse Exon/sampleGlossary"
+
 ##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05"
 ##sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05/output/Mouse Exon/sampleGlossary"
+
+
 
 ##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/ExpressionSets/GeneLevel/Genomics Expression Public Dataset"
 ##sg.path <- "/ExpressionSets/GeneLevel/Genomics Expression Public Dataset/sampleGlossary"
@@ -25,9 +30,9 @@ data.path <- "."
 ##sg.path <- "/sampleData/microarray/runs/Aderem Three Prime Arrays_2009-05-07_at_00.06.21/output/Mouse 430 2.0/sampleGlossary"
 
 library(rjson)
-path.RShared <- "~/MetaAnalysis2009/RShared"
+util.dir <- file.path(Sys.getenv("AA"),"utils")
 sources <- c("httpget.R","utilitiesMetaData.R","utilitiesSampleGroup.R")
-for ( src in sources ){source(paste(path.RShared,src,sep="/"))}
+for ( src in sources ){source(paste(util.dir,src,sep="/"))}
  
 ## Get Sample Group object
 sg.obj <- getNodeObjectByPath(sg.path)

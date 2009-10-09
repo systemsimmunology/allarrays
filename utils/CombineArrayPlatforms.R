@@ -2,10 +2,19 @@
 ## Load and combine 3'prime arrays and exon arrays into single summary matrix and CSSs
 ##
 ##
+
+indir.3prime <- "20090507.3prime"
+indir.exon <- "20090822.exon"
+outdir <- "20090822"
+
 util.dir <- file.path(Sys.getenv("AA"),"utils")
 ncbi.dir <- file.path(Sys.getenv("DATA_DIR"),"ncbi")
 data.dir <- file.path(Sys.getenv("AA"),"data") # local repository for "raw" data
 pdata.dir <- file.path(Sys.getenv("AA"),"processed_data") 
+## Augment the above to full path
+indir.exon <- paste(data.dir,indir.exon,sep="/")
+indir.3prime <- paste(data.dir,indir.3prime,sep="/")
+outdir <- paste(pdata.dir,outdir,sep="/")
 
 load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.symbol.RData",sep="/"))
 load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.eid.RData",sep="/"))
@@ -14,8 +23,13 @@ source(paste(util.dir,"utilitiesPlot.R",sep="/"))
 source(paste(util.dir,"utilitiesSigTest.R",sep="/"))
 source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 
-data.path.exon <- paste(Sys.getenv("DATA_DIR"),"ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05",sep="/")
-data.path.3prime <- paste(Sys.getenv("DATA_DIR"),"ImmunoRepository/sampleData/microarray/runs/Aderem Three Prime Arrays_2009-05-07_at_00.06.21/output/Mouse 430 2.0",sep="/")
+data.path.exon <- indir.exon
+data.path.3prime <- indir.3prime
+
+##Use this to read off network directory
+## Have currently moved all input files to local
+##data.path.exon <- paste(Sys.getenv("DATA_DIR"),"ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05",sep="/")
+##data.path.3prime <- paste(Sys.getenv("DATA_DIR"),"ImmunoRepository/sampleData/microarray/runs/Aderem Three Prime Arrays_2009-05-07_at_00.06.21/output/Mouse 430 2.0",sep="/")
 
 ## Year 1 release of portal
 ## data.path.3prime <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/ExpressionSets/GeneLevel/Genomics Expression Public Dataset"
@@ -24,19 +38,13 @@ data.path.3prime <- paste(Sys.getenv("DATA_DIR"),"ImmunoRepository/sampleData/mi
 ### Load expression data (saved locally as network transfer is slow )
 ###
 
-load(paste(data.dir,"dm.3prime.allarrays.RData",sep="/"))
+load(paste(indir.3prime,"dm.3prime.allarrays.RData",sep="/"))
 dm.3prime <- dm; rm(dm) 
 
 ##load("data/dm.3prime.released.RData")
 ##dm.3prime <- ag; rm(ag) # called ag in older files
 
-load(paste(data.dir,"dm.exon.RData",sep="/"))
-dm.exon <- dm
-
-load(paste(data.dir,"dm.3prime.allarrays.RData",sep="/"))
-dm.3prime <- dm; rm(dm) 
-
-load(paste(data.dir,"dm.exon.RData",sep="/"))
+load(paste(indir.exon,"dm.exon.RData",sep="/"))
 dm.exon <- dm
 
 ### 
@@ -53,6 +61,8 @@ dm.columns.exon <- dm.columns; rm(dm.columns)
 
 load(paste(data.path.exon,"CSSs.tc.RData",sep="/"))
 
+## 5-2-09 Exon Set: 82 timecourses
+## 8-22-09 Exon Set: 98 timecourses
 lung.conds <- names(which(unlist(lapply(CSSs.tc,"[[","Cell Type"))=="Lung"))
 CSSs.tc <- CSSs.tc[setdiff(names(CSSs.tc),lung.conds)]
 ## removed 3
@@ -63,7 +73,7 @@ so <- sort(names(CSSs.tc),index.return=TRUE)$ix
 CSSs.tc <- CSSs.tc[so]
 ## Have 76
 CSSs.tc.exon <- CSSs.tc ; rm(CSSs.tc)
-
+ 
 ##
 ## Load 3 prime timecourses
 ##
@@ -130,6 +140,7 @@ for ( co in inc ) {
 so <- sort(names(CSSs.tc),index.return=TRUE)$ix
 CSSs.tc <- CSSs.tc[so]
 ## Length 129 in June 2009
+## Length 151 in September 2009
 
 ## threeprime.set: Those conditions defined by the three prime set
 threeprime.conds <- sort(c(threeprime.only,names(which(arraychoice=="3prime"))))

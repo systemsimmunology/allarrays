@@ -332,8 +332,11 @@ DMcolsFromSG <- function ( sglist, columns, exon.form=TRUE  ) {
     sg[["Time 1"]] <- nullToBlank("Time 1",sg)
     sg[["Stimulus 2"]] <- nullToBlank("Stimulus 2",sg)
     sg[["Time 2"]] <- nullToBlank("Time 2",sg)
+    ## Construct string from sample group metadata
     dm.stringform <- metaToString(meta(strain=sg[["Strain"]],stimulus1=sg[["Stimulus 1"]],stimulus2=sg[["Stimulus 2"]],time1=sg[["Time 1"]],time2=sg[["Time 2"]],cell.type=sg[["Cell Type"]],sex=sg[["Sex"]]),exon.form)
-    is.there <- dm.stringform %in% columns  
+    ## Test to see if we the stringform exists as a data matrix column
+    is.there <- dm.stringform %in% columns
+    ## If not, go into a series of fixes
     ## Temporary try to replace. Should work with both male and female
     if ( !is.there  & is.null(sg[["Sex"]]) ){
       dm.stringform <- metaToString(meta(strain=sg[["Strain"]],stimulus1=sg[["Stimulus 1"]],stimulus2=sg[["Stimulus 2"]],time1=sg[["Time 1"]],time2=sg[["Time 2"]],cell.type=sg[["Cell Type"]],sex="Female"),exon.form)
@@ -349,7 +352,8 @@ DMcolsFromSG <- function ( sglist, columns, exon.form=TRUE  ) {
       is.there <- dm.stringform %in% columns
     }
     if ( !is.there ){
-      cat(sg$name, " ", dm.stringform,"\n")
+      ## If still not found, report
+      cat("Sample Group:", sg$name, " Transformed column header:", dm.stringform,"\n")
     }
     if ( is.there ) {
       dmcol.from.sg[sg$name] <- dm.stringform
@@ -363,3 +367,15 @@ DMcolsFromSG <- function ( sglist, columns, exon.form=TRUE  ) {
 
 }
   
+writeCSSTCs <- function( CSSs.tc, file="CSSTCs.tsv" ){
+  zz <- file(file, "w")
+  header <- paste(names(CSSs.tc[[1]]),collapse="\t")
+  write(header,file=zz)
+
+  for ( CSS.tc in CSSs.tc ){
+    comsep <- lapply(CSS.tc,paste,collapse=",")
+    rowstring <- paste(comsep,collapse="\t")
+    write(rowstring,file=zz)
+  }
+  close(zz)
+}
