@@ -7,6 +7,10 @@ indir.3prime <- "20090507.3prime"
 indir.exon <- "20090822.exon"
 outdir <- "20090822"
 
+indir.3prime <- "20090507.3prime"
+indir.exon <- "20090502.exon"
+outdir <- "20090507"
+
 util.dir <- file.path(Sys.getenv("AA"),"utils")
 ncbi.dir <- file.path(Sys.getenv("DATA_DIR"),"ncbi")
 data.dir <- file.path(Sys.getenv("AA"),"data") # local repository for "raw" data
@@ -81,11 +85,11 @@ load(paste(data.path.3prime,"CSSs.tc.RData",sep="/"))
 so <- sort(names(CSSs.tc),index.return=TRUE)$ix
 CSSs.tc <- CSSs.tc[so]
 CSSs.tc.3prime <- CSSs.tc ; rm(CSSs.tc)
-## Have 27 with released set, 70 with 2009-05-07
+## Have 60 with 2009-05-07
 ## Some time courses are really short?
 maxtimes <- unlist(lapply(lapply(CSSs.tc.3prime,"[[","Time 1"),max))
 CSSs.tc.3prime <- CSSs.tc.3prime[setdiff(names(CSSs.tc.3prime),names(which(maxtimes < 120)))]
-## 64 tcs remain (2009-05-07)
+## 54 tcs remain (2009-05-07)
 ## No exon arrays have maxtimes < 120 
 
 ## Can be convenient to get rid of "unneeded" columns in data matrices i.e. those that are not in the current set of timecourses
@@ -139,8 +143,8 @@ for ( co in inc ) {
 }
 so <- sort(names(CSSs.tc),index.return=TRUE)$ix
 CSSs.tc <- CSSs.tc[so]
-## Length 129 in June 2009
-## Length 151 in September 2009
+## Length 119 in June 2009
+## Length 141 in September 2009
 
 ## threeprime.set: Those conditions defined by the three prime set
 threeprime.conds <- sort(c(threeprime.only,names(which(arraychoice=="3prime"))))
@@ -152,9 +156,9 @@ exon.conds <- sort(c(exon.only,names(which(arraychoice=="exon"))))
 CSSs.tc.3prime <- CSSs.tc.3prime[threeprime.conds]
 CSSs.tc.exon <- CSSs.tc.exon[exon.conds]
 
-save(CSSs.tc,file=paste(pdata.dir,"CSSs.tc.RData",sep="/"))
-save(CSSs.tc.3prime,file=paste(pdata.dir,"CSSs.tc.3prime.RData",sep="/"))
-save(CSSs.tc.exon,file=paste(pdata.dir,"CSSs.tc.exon.RData",sep="/"))
-save(dm.exon,file=paste(pdata.dir,"dm.exon.RData",sep="/"))
-save(dm.3prime,file=paste(pdata.dir,"dm.3prime.RData",sep="/"))
+save(CSSs.tc,file=paste(outdir,"CSSs.tc.RData",sep="/"))
+save(CSSs.tc.3prime,file=paste(outdir,"CSSs.tc.3prime.RData",sep="/"))
+save(CSSs.tc.exon,file=paste(outdir,"CSSs.tc.exon.RData",sep="/"))
+save(dm.exon,file=paste(outdir,"dm.exon.RData",sep="/"))
+save(dm.3prime,file=paste(outdir,"dm.3prime.RData",sep="/"))
 

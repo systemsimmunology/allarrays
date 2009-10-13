@@ -263,6 +263,12 @@ findTimeZero <- function( CSSs, sglist, zfile = NULL ) {
     }
   } ## end ops for no zero file case
 
+  ## Check that things went OK
+  baddies <- setdiff(names(CSSs), names(zerotime) ) 
+  if ( length(baddies) > 0 ){
+    stop(paste(c("Error: Missing zerotimes for:",baddies),collapse=" ")) 
+  }
+  
   return( zerotime )
   
 }
@@ -295,9 +301,8 @@ includeZeroTime <- function ( CSS.timecourse ) {
     zt <- zeroTimes[[csst.name]] ## sample group name
     CSS.timecourse[[csst.name]][["Time 1"]] <- c(0, CSS.timecourse[[csst.name]][["Time 1"]] )
     CSS.timecourse[[csst.name]][["Sample Group"]] <- c(zt,CSS.timecourse[[csst.name]][["Sample Group"]])
-    ##  samps[[umname]] <- c(zt,samps[[umname]])
-    ##  times[[umname]] <- c(0,times[[umname]])
-    ##  nreps[[umname]] <- c(length(sglist[[zt]][["sampleUUIDs"]]),nreps[[umname]])
+    nreps <- length(sglist[[zt]][["sampleUUIDs"]])
+    CSS.timecourse[[csst.name]][["Replicate Count"]] <- c(nreps,CSS.timecourse[[csst.name]][["Replicate Count"]])
   }
 
   return(CSS.timecourse)

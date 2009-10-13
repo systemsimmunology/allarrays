@@ -4,7 +4,7 @@
 
 ## tmax is the maximum time to plot, in hours
 
-plotCSS <- function( eid, css.timecourse, data.matrix=dm, ymax=NULL,main=NULL,logscale=FALSE, tmax=100 ){
+plotCSS <- function( eid, css.timecourse, data.matrix=dm, ymax=NULL,main=NULL,logscale=FALSE, tmax=100,inset.text=NULL ){
 
   csst.label <- css.timecourse$name
   
@@ -37,12 +37,35 @@ plotCSS <- function( eid, css.timecourse, data.matrix=dm, ymax=NULL,main=NULL,lo
   ##cat(length(x),length(tc),"\n")
   plot(tc,x=x,xlab=xlab,ylim=ylim,ylab=ylab,type='l',col='blue',main=main)
   points(tc,x=x,type='p',col='blue',pch=19)
+
+  if ( !is.null(inset.text) ){
+    text(0.1*max(x),0.9*ymax,inset.text,cex=2)
+  }
+  
 }
- 
+
+
+## guess at an evenly spaced grid needed
+## to accomodate inval subplots
+evengrid <- function ( inval ){
+  fsi <- floor(sqrt(inval))
+  is.square <- fsi == sqrt(inval)
+  splitter <- fsi*(fsi+1)
+  if ( is.square ){
+    return( c(fsi,fsi))
+  }
+  if ( inval <= splitter ){
+    return( c(fsi,fsi+1))
+  }
+  else{
+    return( c(fsi+1,fsi+1))
+  }
+}
+  
 ## for a single ID and multiple css, do plots
 ## ( see gridPredPlotWrapperODE etc. in utilitiesODEsolve.R ) 
-gridPlotCSS <- function ( eid, css.tcs, data.matrix=dm, nx=1, ny=1 , ymax=NULL, labvec=NULL,main='', tmax=100 ){
-
+gridPlotCSS <- function ( eid, css.tcs, data.matrix=dm, nx=NULL, ny=NULL , ymax=NULL, labvec=NULL,main='', tmax=100 ){
+  
   ## could do an input parameter check
   
   ## PNG - seem to work only one page at a time, and gives crummy resolution
@@ -57,8 +80,14 @@ gridPlotCSS <- function ( eid, css.tcs, data.matrix=dm, nx=1, ny=1 , ymax=NULL, 
 
   ##Can't get pdf to do 'landscape'
   ##pdf(file,paper='letter',height=8.5,width=11)
- 
-  par(mfrow=c(nx,ny),mar=(c(3, 2, 2, 1)+0.1),mgp=c(1.75, 0.75, 0),oma=c(0,0,3,0))
+
+  if ( is.null(nx) & is.null(ny) ){
+    mfrow <- evengrid(length(css.tcs))
+  } else {
+    mfrow=c(nx,ny)
+  }
+  
+  par(mfrow=mfrow,mar=(c(3, 2, 2, 1)+0.1),mgp=c(1.75, 0.75, 0),oma=c(0,0,3,0))
 
   if ( is.null(ymax) ){
     ymax <- max(data.matrix[eid,unlist(lapply(css.tcs,"[[","DM Column"))])
@@ -68,12 +97,9 @@ gridPlotCSS <- function ( eid, css.tcs, data.matrix=dm, nx=1, ny=1 , ymax=NULL, 
   }
 
   for ( css in css.tcs ){
-    plotCSS(eid,css,data.matrix=data.matrix,main=labvec[css$name],ymax=ymax, tmax=tmax)
-    ##plotCSS(eid,css,data.matrix=data.matrix,main=css$name,ylim=ylim)
+    plotCSS(eid,css,data.matrix=data.matrix,ymax=ymax, tmax=tmax, inset.text=labvec[css$name] )
   }
-
   mtext(main, adj=0.5, side=3, cex=1.5, outer=TRUE)
-  
 }
 
               

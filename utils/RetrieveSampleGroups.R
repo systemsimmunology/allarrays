@@ -7,7 +7,6 @@
 
 ## E.g
 ## R --arch x86_64 --vanilla --slave --args "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - BMDM Arrays_2009-03-29_at_09.20.12/output/Mouse Exon/sampleGlossary" < /Volumes/thorsson/MetaAnalysis2009/RShared/RetrieveSampleGroups.R
-
 ca <- commandArgs()
 sg.path <- ca[5]
 data.path <- "."
@@ -19,11 +18,8 @@ data.path <- "."
 ##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05"
 ##sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05/output/Mouse Exon/sampleGlossary"
 
-
-
 ##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/ExpressionSets/GeneLevel/Genomics Expression Public Dataset"
 ##sg.path <- "/ExpressionSets/GeneLevel/Genomics Expression Public Dataset/sampleGlossary"
-
 
 ##test values
 ##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/Aderem Three Prime Arrays_2009-05-07_at_00.06.21/output/Mouse 430 2.0"
@@ -58,13 +54,11 @@ save(sglist,file="sglist.RData")
 ## Stimulated
 CSSs <- getUniqueCSSs( sglist )
 
-
 bcname <- paste(data.path,"BadCSS.txt",sep="/")
 if(file.access(bcname)==0) {
   baddies <- read.table(file=bcname,as.is=TRUE,sep='\t')$V1
   CSSs <- CSSs[setdiff(names(CSSs),baddies)]
 }
-
 
 save(CSSs,file="CSSs.RData")
 
@@ -108,12 +102,38 @@ if( file.access(paste(data.path,"AllGenes.txt",sep="/")) ==0 ){
 save(dm.columns,file="dm.columns.RData")
 
 ### It will be convenient to carry these mappings with SCCs.tc
-
 for ( tc in CSSs.tc ){
   dmc <- as.character(dm.columns[tc[["Sample Group"]]])
   CSSs.tc[[tc$name]][["DM Column"]] <- dmc
 }
 
+
+## Before writing up, check for length consistencies and
+## absence of nulls
+
+for ( csstc in CSSs.tc ){
+  if ( is.null(csstc$Sex) ){
+    sto("Missing Sex attribute in",csstc$name)
+  }
+  s <- csstc[["Sample Group"]]
+  t <- csstc[["Time 1"]]
+  r <- csstc[["Replicate Count"]]
+  if ( length(s) != length(t) ){
+    stop("Sample Group and Time 1 of unequal length in ",csstc$name)
+  }  
+  if ( length(s) != length(t) ){
+    stop("Sample Group and Replicate Count of unequal length in ",csstc$name)
+  }
+  if (length(which(is.null(s))>0)){
+    stop("NULL Sample Group in ",csstc$name)
+  }
+  if (length(which(is.null(t))>0)){
+    stop("NULL Time 1 in ",csstc$name)
+  }
+  if (length(which(is.null(r))>0)){
+    stop("NULL Replicate Count in ",csstc$name)
+  }  
+}
 
 save(CSSs.tc,file="CSSs.tc.RData")
 

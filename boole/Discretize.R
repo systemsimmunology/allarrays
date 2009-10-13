@@ -1,6 +1,6 @@
 
 util.dir <- file.path(Sys.getenv("AA"),"utils")
-pdata.dir <- file.path(Sys.getenv("AA"),"processed_data") 
+pdata.dir <- file.path(Sys.getenv("AA"),"processed_data/20090507") 
 load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.symbol.RData",sep="/"))
 source(paste(util.dir,"utilitiesSigTest.R",sep="/"))
 load(paste(pdata.dir,"dm.3prime.RData",sep="/"))
@@ -21,6 +21,12 @@ mm.3prime <- binarizeCSSTs(eids.on.both,CSSs.tc.3prime,data.matrix=dm.3prime,rat
 mm <-cbind(mm.3prime,mm.exon)
 
 save(mm,file=paste(pdata.dir,"mm.RData",sep="/"))
+
+## Per gene, how many conditions is it expressed in 
+n.expressed.conds <- apply(mm,1,sum)
+genes.not.expressed <- names(which( n.expressed.conds == 0 ))
+genes.always.expressed <- names(which( n.expressed.conds == length(CSSs.tc) ))
+variable.genes <- setdiff(rownames(mm),union(genes.not.expressed,genes.always.expressed))
 
 ###
 ### Functional groups
