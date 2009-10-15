@@ -12,8 +12,8 @@ sg.path <- ca[5]
 data.path <- "."
 
 ##test values
-##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09"
-##sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09/output/Mouse Exon/sampleGlossary"
+data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09"
+sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09/output/Mouse Exon/sampleGlossary"
 
 ##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05"
 ##sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05/output/Mouse Exon/sampleGlossary"

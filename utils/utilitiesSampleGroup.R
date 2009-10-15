@@ -224,10 +224,13 @@ findTimeZero <- function( CSSs, sglist, zfile = NULL ) {
   sg.unstim <- names(which(unlist(lapply(sglist,"[[","Stimulus 1"))=="Unstimulated"))
   sg.nulls <- names(which(unlist(lapply(lapply(sglist,"[[","Stimulus 1"),is.null))))
   sg.mock <- names(which(unlist(lapply(sglist,"[[","Stimulus 1"))=="Mock infected"))
-  possiblezeros <- union(sg.unstim,union(sg.nulls,sg.mock))
+  time1s <- lapply(lapply(sglist,"[[","Time 1"),as.integer)
+  sg.zt <- names(which(time1s==0)) ## has overlap with sg.unstim
+
+  possiblezeros <- union(sg.zt,union(sg.unstim,union(sg.nulls,sg.mock)))
   ## The are candidate zero time cases among the sample groups
   
-  if ( !is.null(zfile) ) {
+  if ( !is.null(zfile) ) { ## there is a zerofile
     zd <- read.table(zfile,header=1,as.is=T,sep="\t")
     zerotime <- list()
     for ( umname in stimmed ){
@@ -255,7 +258,7 @@ findTimeZero <- function( CSSs, sglist, zfile = NULL ) {
       query <- list()
       query[["Strain"]]  <- um[["Strain"]]
       query[["Cell Type"]] <- um[["Cell Type"]]
-      for ( sg in sglist[union(sg.unstim,union(sg.nulls,sg.mock))] ){
+      for ( sg in sglist[possiblezeros] ){
         if ( inMeta ( query, sg ) ){
           zerotime[[umname]] <- sg$name
         }

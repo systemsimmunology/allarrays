@@ -8,17 +8,15 @@ source(paste(util.dir,"httpget.R",sep="/"))
 source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 source(paste(util.dir,"utilitiesSampleGroup.R",sep="/"))
 
-timefilter <- FALSE 
+timefilter <- TRUE
 debug <- FALSE
 
 if ( timefilter ){
   ##the period from March 1, 2009 - August 30, 2009 (Not sure about this!)
   ## format m/d/y
-  startDate <- "3/1/09"
-  endDate <- "8/30/09"
+  startDate <- "9/1/09"
+  endDate <- "10/30/09"
 }
-
-term.array="/sampleData/microarray/chips/Mouse Exon"
 
 ##term.array="/sampleData/microarray/chips/Mouse 430 2.0"
 
@@ -47,8 +45,8 @@ term.array="/sampleData/microarray/chips/Mouse Exon"
 ##names(term.stim)="Stimulus 1"
 ##term.t="\"0120\""
 ##names(term.t)="Time 1" 
-
-
+ 
+term.array="/sampleData/microarray/chips/Mouse Exon"
 names(term.array) = "chip"
 termlist <- list()
 termlist[[1]] <- term.array
