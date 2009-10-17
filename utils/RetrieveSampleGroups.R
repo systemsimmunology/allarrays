@@ -3,17 +3,17 @@
 ## Read sample groups. Arrange into time-courses
 ##
 ## Invoke using 
-## R --vanilla --arch x86_64 --slave --args "Full JCR Path To Sample Group" < RetrieveSampleGroups.R 
+## R --arch x86_64 --slave --args "Full JCR Path To Sample Group" < RetrieveSampleGroups.R 
 
 ## E.g
-## R --arch x86_64 --vanilla --slave --args "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - BMDM Arrays_2009-03-29_at_09.20.12/output/Mouse Exon/sampleGlossary" < /Volumes/thorsson/MetaAnalysis2009/RShared/RetrieveSampleGroups.R
+## R --arch x86_64 --slave --args "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - BMDM Arrays_2009-03-29_at_09.20.12/output/Mouse Exon/sampleGlossary" < /Volumes/thorsson/MetaAnalysis2009/RShared/RetrieveSampleGroups.R
 ca <- commandArgs()
-sg.path <- ca[5]
+sg.path <- ca[4]
 data.path <- "."
 
 ##test values
-data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09"
-sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09/output/Mouse Exon/sampleGlossary"
+##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09"
+##sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09/output/Mouse Exon/sampleGlossary"
 
 ##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05"
 ##sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-05-02_at_09.20.05/output/Mouse Exon/sampleGlossary"
@@ -29,7 +29,7 @@ library(rjson)
 util.dir <- file.path(Sys.getenv("AA"),"utils")
 sources <- c("httpget.R","utilitiesMetaData.R","utilitiesSampleGroup.R")
 for ( src in sources ){source(paste(util.dir,src,sep="/"))}
- 
+
 ## Get Sample Group object
 sg.obj <- getNodeObjectByPath(sg.path)
 ## parse out child nodes of this object
@@ -81,7 +81,6 @@ if(file.access(ztname)==0) {
 CSSs.tc <- includeZeroTime( CSSs.tc )
 
 save(CSSs.tc,file="CSSs.tc.RData")
-
 
 ##
 ##  This relies on the existence of an expression matrix file

@@ -4,12 +4,8 @@
 ##
 
 indir.3prime <- "20090507.3prime"
-indir.exon <- "20090822.exon"
-outdir <- "20090822"
-
-indir.3prime <- "20090507.3prime"
-indir.exon <- "20090502.exon"
-outdir <- "20090507"
+indir.exon <- "20091015.exon"
+outdir <- "20091015"
 
 util.dir <- file.path(Sys.getenv("AA"),"utils")
 ncbi.dir <- file.path(Sys.getenv("DATA_DIR"),"ncbi")
@@ -41,14 +37,14 @@ data.path.3prime <- indir.3prime
 ### 
 ### Load expression data (saved locally as network transfer is slow )
 ###
-
+ 
 load(paste(indir.3prime,"dm.3prime.allarrays.RData",sep="/"))
 dm.3prime <- dm; rm(dm) 
 
 ##load("data/dm.3prime.released.RData")
 ##dm.3prime <- ag; rm(ag) # called ag in older files
 
-load(paste(indir.exon,"dm.exon.RData",sep="/"))
+load(paste(indir.exon,"dm.RData",sep="/"))
 dm.exon <- dm
 
 ### 
@@ -64,18 +60,17 @@ dm.columns.exon <- dm.columns; rm(dm.columns)
 ##
 
 load(paste(data.path.exon,"CSSs.tc.RData",sep="/"))
-
 ## 5-2-09 Exon Set: 82 timecourses
 ## 8-22-09 Exon Set: 98 timecourses
-lung.conds <- names(which(unlist(lapply(CSSs.tc,"[[","Cell Type"))=="Lung"))
-CSSs.tc <- CSSs.tc[setdiff(names(CSSs.tc),lung.conds)]
+## 10-15-09 Exon Set: 101 timecoures
+##lung.conds <- names(which(unlist(lapply(CSSs.tc,"[[","Cell Type"))=="Lung"))
+##CSSs.tc <- CSSs.tc[setdiff(names(CSSs.tc),lung.conds)]
 ## removed 3
-mtec.conds <- names(which(unlist(lapply(CSSs.tc,"[[","Cell Type"))=="mTEC"))
-CSSs.tc <- CSSs.tc[setdiff(names(CSSs.tc),mtec.conds)]
+##mtec.conds <- names(which(unlist(lapply(CSSs.tc,"[[","Cell Type"))=="mTEC"))
+##CSSs.tc <- CSSs.tc[setdiff(names(CSSs.tc),mtec.conds)]
 ## removed 3
 so <- sort(names(CSSs.tc),index.return=TRUE)$ix
 CSSs.tc <- CSSs.tc[so]
-## Have 76
 CSSs.tc.exon <- CSSs.tc ; rm(CSSs.tc)
  
 ##
@@ -144,6 +139,7 @@ for ( co in inc ) {
 so <- sort(names(CSSs.tc),index.return=TRUE)$ix
 CSSs.tc <- CSSs.tc[so]
 ## Length 119 in June 2009
+## Length 131 in September 2009
 ## Length 141 in September 2009
 
 ## threeprime.set: Those conditions defined by the three prime set
