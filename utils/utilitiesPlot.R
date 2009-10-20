@@ -4,7 +4,7 @@
 
 ## tmax is the maximum time to plot, in hours
 
-plotCSS <- function( eid, css.timecourse, data.matrix=dm, ymax=NULL,main=NULL,logscale=FALSE, tmax=100,inset.text=NULL ){
+plotCSS <- function( eid, css.timecourse, data.matrix=dm, ymax=NULL,main=NULL,logscale=FALSE, tmax=350,inset.text=NULL ){
 
   csst.label <- css.timecourse$name
   
@@ -64,7 +64,7 @@ evengrid <- function ( inval ){
   
 ## for a single ID and multiple css, do plots
 ## ( see gridPredPlotWrapperODE etc. in utilitiesODEsolve.R ) 
-gridPlotCSS <- function ( eid, css.tcs, data.matrix=dm, nx=NULL, ny=NULL , ymax=NULL, labvec=NULL,main='', tmax=100 ){
+gridPlotCSS <- function ( eid, css.tcs, data.matrix=dm, nx=NULL, ny=NULL , ymax=NULL, labvec=NULL,main='', tmax=350 ){
   
   ## could do an input parameter check
   

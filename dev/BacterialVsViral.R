@@ -68,11 +68,11 @@ gridPlotCSS(eid, CSSs.tc.vex, data.matrix = dm.exon, main=main,labvec=mm[eid,], 
 
 x11()
 main <- paste(gene.symbol[eid],": Bacterial, Exon Arrays", collapse=" ")
-gridPlotCSS(eid, CSSs.tc.bex, data.matrix = dm.exon, main=main, labvec=mm[eid,], ymax=max(dm.exon.bmdm[eid,]))
+gridPlotCSS(eid, CSSs.tc.bex, data.matrix = dm.exon, main=main, labvec=mm[eid,], ymax=max(dm.exon.b[eid,]))
 
 x11()
 main <- paste(gene.symbol[eid],": Bacterial, 3 Prime Arrays", collapse=" ")
-gridPlotCSS(eid, CSSs.tc.b3p, data.matrix = dm.3prime,main=main, labvec=mm[eid,], ymax=max(dm.3prime.bmdm[eid,]))
+gridPlotCSS(eid, CSSs.tc.b3p, data.matrix = dm.3prime,main=main, labvec=mm[eid,], ymax=max(dm.3prime.b[eid,]))
 
 
 n.conds <- length(v)
