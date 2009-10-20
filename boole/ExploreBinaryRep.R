@@ -1,6 +1,6 @@
 
 util.dir <- file.path(Sys.getenv("AA"),"utils")
-pdata.dir <- file.path(Sys.getenv("AA"),"processed_data") 
+pdata.dir <- file.path(Sys.getenv("AA"),"processed_data/20091015") 
 load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.symbol.RData",sep="/"))
 
 load(paste(pdata.dir,"mm.RData",sep="/"))

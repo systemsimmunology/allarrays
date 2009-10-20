@@ -188,9 +188,11 @@ findTimeCourse <- function( CSSs, sglist ){
         }
       }      
       if ( inMeta(um,sg) ){
-        CSSout[[umname]][["Sample Group"]] <- c(CSSout[[umname]][["Sample Group"]],sgname)
-        CSSout[[umname]][["Time 1"]] <- c(CSSout[[umname]][["Time 1"]],as.numeric(sg[["Time 1"]]) )
-        CSSout[[umname]][["Replicate Count"]] <- c(CSSout[[umname]][["Replicate Count"]],length(sg[["sampleUUIDs"]]))
+        if ( as.numeric(sg[["Time 1"]]) > 0 ){## want to exclude zero time here, and incorporate it lateer
+          CSSout[[umname]][["Sample Group"]] <- c(CSSout[[umname]][["Sample Group"]],sgname)
+          CSSout[[umname]][["Time 1"]] <- c(CSSout[[umname]][["Time 1"]],as.numeric(sg[["Time 1"]]) )
+          CSSout[[umname]][["Replicate Count"]] <- c(CSSout[[umname]][["Replicate Count"]],length(sg[["sampleUUIDs"]]))
+        }
       }
     }
   }

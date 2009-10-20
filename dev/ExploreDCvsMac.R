@@ -10,6 +10,7 @@ util.dir <- file.path(Sys.getenv("AA"),"utils")
 load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.symbol.RData",sep="/"))
 
 source(paste(util.dir,"utilitiesPlot.R",sep="/"))
+source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 
 load(paste(pdata.dir,"dm.3prime.RData",sep="/"))
 load(paste(pdata.dir,"dm.exon.RData",sep="/"))
@@ -54,10 +55,15 @@ dcex <- intersect(dc.conds,names(CSSs.tc.exon))
 CSSs.tc.dcex <- CSSs.tc.exon[dcex]
 dm.exon.dc <- dm.exon[,unlist(lapply(CSSs.tc.dcex,"[[","DM Column"))]
 
+we <- names(sort(w,decreasing=TRUE)[1:25])
+eid <- we[2]
+
+
 x11()
 main <- paste(gene.symbol[eid],": DCs, Exon Arrays", collapse=" ")
 gridPlotCSS(eid, CSSs.tc.dcex, data.matrix = dm.exon, main=main,labvec=mm[eid,], ymax=max(dm.exon.dc[eid,]))
 
+x11()
 main <- paste(gene.symbol[eid],": BMDMs, Exon Arrays", collapse=" ")
 gridPlotCSS(eid, CSSs.tc.bex, data.matrix = dm.exon, main=main, labvec=mm[eid,], ymax=max(dm.exon.bmdm[eid,]))
 
