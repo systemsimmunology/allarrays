@@ -1,5 +1,4 @@
 
-
 ##########################################
 ## BMDM vs DC signatures 
 #########################################
@@ -32,32 +31,43 @@ n.bmdm <- length(bmdm.conds)
 n.dc <- length(dc.conds)
 n.conds <- length(v)
 
-## Attempt simple probabilistic classifier
-w <- (length(bmdm.conds) - apply(mm[,bmdm.conds],1,sum)) + apply(mm[,dc.conds],1,sum)
-##w <- w/(length(bmdm.conds)+length(dc.conds))
-names(sort(w,decreasing=TRUE)[1:10])
-
-sum(mm[eid,dc.conds])/length(dc.conds)
-sum(mm[eid,bmdm.conds])/length(bmdm.conds)
-
 ## bmdm set on exon arrays: timecourses and data matrices
 bex <- intersect(bmdm.conds,names(CSSs.tc.exon))
 CSSs.tc.bex <- CSSs.tc.exon[bex]
 dm.exon.bmdm <- dm.exon[,unlist(lapply(CSSs.tc.bex,"[[","DM Column"))]
+
+## dc set on exon arrays: timecourses and data matrices
+dcex <- intersect(dc.conds,names(CSSs.tc.exon))
+CSSs.tc.dcex <- CSSs.tc.exon[dcex]
+dm.exon.dc <- dm.exon[,unlist(lapply(CSSs.tc.dcex,"[[","DM Column"))]
 
 ## bmdm set on 3 prime arrays: timecourses and data matrices
 b3p <- intersect(bmdm.conds,names(CSSs.tc.3prime))
 CSSs.tc.b3p <- CSSs.tc.3prime[b3p]
 dm.3prime.bmdm <- dm.3prime[,unlist(lapply(CSSs.tc.b3p,"[[","DM Column"))]
 
-## bmdm set on exon arrays: timecourses and data matrices
-dcex <- intersect(dc.conds,names(CSSs.tc.exon))
-CSSs.tc.dcex <- CSSs.tc.exon[dcex]
-dm.exon.dc <- dm.exon[,unlist(lapply(CSSs.tc.dcex,"[[","DM Column"))]
-
+## Attempt simple probabilistic classifier
+## scores for "DC-ness"
+w <- (length(bmdm.conds) - apply(mm[,bmdm.conds],1,sum)) + apply(mm[,dc.conds],1,sum)
+##w <- w/(length(bmdm.conds)+length(dc.conds))
 we <- names(sort(w,decreasing=TRUE)[1:25])
+
+## Ranking by "BMDM-ness"
+we <- names(sort(w,decreasing=FALSE)[1:25])
+
+vdc <- apply(mm[,dc.conds],1,sum)/n.dc
+vmac <- apply(mm[,bmdm.conds],1,sum)/n.bmdm
+plot(vmac,vdc,xlab="DC frequency",ylab="Mac frequency")
+text(vmac,vdc,labels=gene.symbol[rownames(mm)],pos=3)
+
+
 eid <- we[2]
 
+sum(mm[eid,dc.conds])/length(dc.conds)
+sum(mm[eid,bmdm.conds])/length(bmdm.conds)
+paste(mm[eid,dc.conds],collapse="")
+paste(mm[eid,bmdm.conds],collapse="")
+we <- names(sort(w,decreasing=TRUE)[1:25])
 
 x11()
 main <- paste(gene.symbol[eid],": DCs, Exon Arrays", collapse=" ")

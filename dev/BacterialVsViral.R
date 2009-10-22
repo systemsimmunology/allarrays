@@ -34,11 +34,6 @@ nb <- length(b.conds)
 nv <- length(v.conds)
 nall <- nb+nv
 
-## Attempt simple probabilistic classifier
-w <- (length(b.conds) - apply(mm[,b.conds],1,sum)) + apply(mm[,v.conds],1,sum)
-##w <- w/(length(bmdm.conds)+length(dc.conds))
-names(sort(w,decreasing=TRUE)[1:10])
-
 ## b set on exon arrays: timecourses and data matrices
 bex <- intersect(b.conds,names(CSSs.tc.exon))
 CSSs.tc.bex <- CSSs.tc.exon[bex]
@@ -59,21 +54,56 @@ v3p <- intersect(v.conds,names(CSSs.tc.3prime))
 CSSs.tc.v3p <- CSSs.tc.3prime[v3p]
 dm.3prime.v <- dm.3prime[,unlist(lapply(CSSs.tc.v3p,"[[","DM Column"))]
 
+
+## Attempt simple probabilistic classifier
+w <- (length(b.conds) - apply(mm[,b.conds],1,sum)) + apply(mm[,v.conds],1,sum)
+w <- w/(length(b.conds)+length(v.conds))
+
+vv <- apply(mm[,v.conds],1,sum)/nv
+bb <- apply(mm[,b.conds],1,sum)/nb
+plot(bb,vv,xlab="Bacterial frequency",ylab="Viral frequency")
+text(bb,vv,labels=gene.symbol[rownames(mm)],pos=3)
+
+
+## Condition weight??
+cw <- apply(mm,2,sum)/nrow(mm)
+## Normalize to a "probability"
+cw <- cw/sum(cw)
+mmw <- t(t(mm)*cw)
+vvw <- apply(mmw[,v.conds],1,sum)/nv
+bbw <- apply(mmw[,b.conds],1,sum)/nb
+plot(bbw,vvw,xlab="Weighted Bacterial frequency",ylab="Weighted Viral frequency")
+text(bbw,vvw,labels=gene.symbol[rownames(mm)],pos=3)
+
+
 we <- names(sort(w,decreasing=TRUE)[1:25])
-eid <- we[1]
+
+
+we <- names(sort(w,increasing=TRUE)[1:25])
+
+
+eid <- we[2]
+sum(mm[eid,v.conds])/length(v.conds)
+sum(mm[eid,b.conds])/length(b.conds)
+paste(mm[eid,v.conds],collapse="")
+paste(mm[eid,b.conds],collapse="")
+
 
 x11()
-main <- paste(gene.symbol[eid],": Viral, Exon Arrays", collapse=" ")
+main <- paste(gene.symbol[eid],": Viral activation, Exon Arrays", collapse=" ")
 gridPlotCSS(eid, CSSs.tc.vex, data.matrix = dm.exon, main=main,labvec=mm[eid,], ymax=max(dm.exon.v[eid,]))
 
 x11()
-main <- paste(gene.symbol[eid],": Bacterial, Exon Arrays", collapse=" ")
+main <- paste(gene.symbol[eid],": Bacterial activation, Exon Arrays", collapse=" ")
 gridPlotCSS(eid, CSSs.tc.bex, data.matrix = dm.exon, main=main, labvec=mm[eid,], ymax=max(dm.exon.b[eid,]))
 
 x11()
-main <- paste(gene.symbol[eid],": Bacterial, 3 Prime Arrays", collapse=" ")
+main <- paste(gene.symbol[eid],": Bacterial activation, 3 Prime Arrays", collapse=" ")
 gridPlotCSS(eid, CSSs.tc.b3p, data.matrix = dm.3prime,main=main, labvec=mm[eid,], ymax=max(dm.3prime.b[eid,]))
 
+x11()
+main <- paste(gene.symbol[eid],": Viral activation, 3 Prime Arrays", collapse=" ")
+gridPlotCSS(eid, CSSs.tc.v3p, data.matrix = dm.3prime,main=main, labvec=mm[eid,], ymax=max(dm.3prime.v[eid,]))
 
 n.conds <- length(v)
 

@@ -8,7 +8,7 @@ source(paste(util.dir,"httpget.R",sep="/"))
 source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 source(paste(util.dir,"utilitiesSampleGroup.R",sep="/"))
 
-timefilter <- TRUE
+timefilter <- FALSE
 debug <- FALSE
 
 if ( timefilter ){
@@ -45,8 +45,9 @@ if ( timefilter ){
 ##names(term.stim)="Stimulus 1"
 ##term.t="\"0120\""
 ##names(term.t)="Time 1" 
- 
-term.array="/sampleData/microarray/chips/Mouse Exon"
+
+term.array="/sampleData/microarray/chips/Mouse 430 2.0"
+##term.array="/sampleData/microarray/chips/Mouse Exon"
 names(term.array) = "chip"
 termlist <- list()
 termlist[[1]] <- term.array
