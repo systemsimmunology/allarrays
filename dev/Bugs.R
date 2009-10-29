@@ -4,11 +4,11 @@
 ########################
 
 ## Oddity: Why is there both a "BMDM_Bl6_salmonella.flgBpEm62__Female" and "BMDM_Bl6_salmonella.flgBpEm62__Male"
-## Another oddity requiring a fix 
- 
-CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["Sample Group"]] <- CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["Sample Group"]][2:4]
-CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["Time 1"]] <- CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["Time 1"]][2:4]
-CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["DM Column"]] <- CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["DM Column"]][2:4]
+
+## This is a fix that no longer seems required
+## CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["Sample Group"]] <- CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["Sample Group"]][2:4]
+## CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["Time 1"]] <- CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["Time 1"]][2:4]
+## CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["DM Column"]] <- CSSs.tc.exon[["BMDM_MyD88-Trif null_Listeria__Female"]][["DM Column"]][2:4]
 
 ## Why is there a "MyD88-Trif-null_Listeria_in-vitro_0000___BMDM_Mouse" sample group??
 
@@ -21,9 +21,6 @@ listeria.strings <- c("Listeria")
 sc.exon <- names(CSSs.tc.exon)[ stim1s.exon %in% salmonella.strings ]
 sc.3prime <- names(CSSs.tc.3prime)[ stim1s.3prime %in% salmonella.strings ] ## keep in mind that we removed the wt.
 lc.exon <- names(CSSs.tc.exon)[ stim1s.exon %in% listeria.strings ]
-
-## IPAF has no unstim. Remove.
-sc.3prime <- setdiff(sc.3prime,sc.3prime[grep("Ipaf null",sc.3prime)])
 
 ## We're down to several now, so let's just choose the plot order
 sc.exon <- c( "BMDM_Bl6_salmonella.wt__Female","BMDM_MyD88-Trif null_salmonella.wt__Female","BMDM_Bl6_FlgEProfect__Female" , "BMDM_Bl6_FliCProfect__Female" )
@@ -61,6 +58,8 @@ ww <- ww/2.
 
 cois <- c("BMDM_Bl6_salmonella.wt__Female","BMDM_Bl6_Listeria__Female","BMDM_Bl6_LPS__Female","BMDM_MyD88-Trif null_salmonella.wt__Female")
 
+eids <- rownames(mm) ## include all, or replace with filtered 
+
 ## This is for the combined array mm, which can be imperfect
 ## as the choice made for LPS is currently 3 prime
 sa.set <- names(which(mm[eids,"BMDM_Bl6_salmonella.wt__Female"]==1))
@@ -76,6 +75,9 @@ sa.exon <- names(which(mm.exon[eids,"BMDM_Bl6_salmonella.wt__Female"]==1))
 lps.3prime <- names(which(mm.3prime[eids,"BMDM_Bl6_LPS__Female"]==1))
 lps.exon <- names(which(mm.exon[eids,"BMDM_Bl6_LPS__Female"]==1))
 
+##
+##
+load("/Volumes/ILYA LAB/Vesteinn/data/ncbi/gene.eid.RData")
 
 eid <- gene.eid["Pdgfb"] ##
 
@@ -118,20 +120,31 @@ bugtlrPlot <- function ( eid ){
 
 ## A more continuous version, based on maximum ratios
 
-### Move this elsewhere if it useful !!
+source("../utils/utilitiesSigTest.R")
 mr.exon <- maxRatioMultipleCSSTs(eids,CSSs.tc.exon,data.matrix=dm.exon)
 mr.3prime <- maxRatioMultipleCSSTs(eids,CSSs.tc.3prime,data.matrix=dm.3prime)
 
+## Having moved to a choice, when two arrays are possible, some of these
+## are not longer available. Can reinstate if needed
+
+## IF using full info from both arrays 
+
 sa.3prime.vec <- mr.3prime[eids,"BMDM_Bl6_salmonella.wt__Female"]
-lps.3prime.vec <- mr.3prime[eids,"BMDM_Bl6_LPS__Female"]
-
 sa.exon.vec <- mr.exon[eids,"BMDM_Bl6_salmonella.wt__Female"]
-li.exon.vec <- mr.exon[eids,"BMDM_Bl6_Listeria__Female"]
-lps.exon.vec <- mr.exon[eids,"BMDM_Bl6_LPS__Female"]
-
-
 sa.vec <- (sa.3prime.vec + sa.exon.vec)/2.
+
+lps.3prime.vec <- mr.3prime[eids,"BMDM_Bl6_LPS__Female"]
+lps.exon.vec <- mr.exon[eids,"BMDM_Bl6_LPS__Female"]
 lps.vec <- (lps.3prime.vec + lps.exon.vec)/2.
+
+## ELSE, if a choice has been made
+sa.exon.vec <- mr.exon[eids,"BMDM_Bl6_salmonella.wt__Female"]
+sa.vec <- sa.exon.vec
+
+lps.3prime.vec <- mr.3prime[eids,"BMDM_Bl6_LPS__Female"]
+lps.vec <- lps.3prime.vec
+
+li.exon.vec <- mr.exon[eids,"BMDM_Bl6_Listeria__Female"]
 
 plot(sa.vec,lps.vec,xlim=c(0,10),ylim=c(0,10))
 text(sa.vec,lps.vec,labels=gene.symbol[eids])
