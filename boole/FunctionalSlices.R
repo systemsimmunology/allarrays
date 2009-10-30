@@ -24,6 +24,9 @@ library(KEGG.db)
 kp <- as.list(KEGGPATHID2EXTID)
 aacid <- kp[["mmu00590"]]
 
+## Ubiquitin Mediated Protelysis
+ump <- kp[["mmu04120"]]
+
 source("~/bin/R/MatrixPrintFormat.R")
 
 cat("\nCytokine Activity\n")
@@ -36,13 +39,23 @@ mm.cb <- sliceByAvailableRows(cb,mm)
 mm.cb <- diversify(mm.cb,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)
 writeBooleMat( mm.cb, prefix = "CB", outdir=pdata.dir )
 
+
 cat("\nTranscription Factor Activity\n")
 mm.tfa <- sliceByAvailableRows(tfa,mm)
-mm.tfa <- diversify(mm.tfa,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)
+mm.tfa <- diversify(mm.tfa,col.on.min=0.05)
 writeBooleMat( mm.tfa, prefix = "TFA", outdir=pdata.dir )
 
-cat("\nArachidonic Acid Pathway\n")
+cat("\nKEGG: Ubiquitin Mediated Proteolyis\n")
+mm.ump <- sliceByAvailableRows(ump,mm)
+mm.ump <- diversify(mm.ump)
+writeBooleMat( mm.ump, prefix = "UMP", outdir=pdata.dir )
+
+cat("\nKEGG: Arichodinc Acid\n")
 mm.aacid <- sliceByAvailableRows(aacid,mm)
 mm.aacid <- diversify(mm.aacid) ## not a lot expressed at all
 ##mm.aacid <- diversify(mm.aacid,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)
 writeBooleMat( mm.aacid, prefix = "AACID", outdir=pdata.dir )
+
+
+
+
