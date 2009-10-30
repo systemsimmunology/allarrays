@@ -15,6 +15,17 @@ num.on.conds <- apply(mm[eids,var.conds],1,sum)
 min.num.conds <- floor(0.05*ncol(mm))
 eids <- names(which(num.on.conds>min.num.conds))
 
+ofile <- paste(pdata.dir,"CAboole.tsv",sep="/")
+write.table(file=ofile,mm[intersect(ca,eids.on.both),],quote=FALSE,sep="\t")
+
+## For MATLAB write separate files with values and labels
+set <- intersect(ca,eids.on.both)
+ofile <- paste(pdata.dir,"CAbooleVals.tsv",sep="/")
+write.table(file=ofile,mm[set,],quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
+ofile <- paste(pdata.dir,"CAbooleGeneIDs.tsv",sep="/")
+write.table(file=ofile,cbind(set,gene.symbol[set]),quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
+
+
 
 ### Clustering of binary vectors
 
