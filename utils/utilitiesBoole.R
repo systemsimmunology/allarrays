@@ -64,17 +64,21 @@ diversify <- function( inMat, col.on.min=NULL,col.on.max=NULL, row.on.min=NULL,r
   
 
 writeBooleMat <- function ( inMat, prefix = "", outdir ){
+
   ofile <- paste(outdir,"/",prefix,"booleMat.tsv",sep="")
-  mm.ca.mpf <- matrixPrintFormat(mm.ca,topLeftString="GeneID")
-  write.table(file=ofile,mm.ca.mpf,sep="\t",row.names=FALSE,col.names=FALSE)
-  set <- rownames(mm.ca)
+  inMat.mpf <- matrixPrintFormat(inMat,topLeftString="GeneID")
+  write.table(file=ofile,inMat.mpf,sep="\t",row.names=FALSE,col.names=FALSE)
+  set <- rownames(inMat)
+  
   ## For MATLAB write separate files with values and labels
-  ofile <- paste(outdir,"CAbooleVals.tsv",sep="/")
-  write.table(file=ofile,mm.ca,quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
-  ofile <- paste(outdir,"CAbooleGeneIDs.tsv",sep="/")
+  ofile <- paste(outdir,"/",prefix,"booleVals.tsv",sep="")
+  write.table(file=ofile,inMat,quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
+
+  ofile <- paste(outdir,"/",prefix,"booleGeneIDs.tsv",sep="")
   write.table(file=ofile,cbind(set,gene.symbol[set]),quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
-  ofile <- paste(outdir,"CAbooleMatWithGeneSymbols.tsv",sep="/")
-  mm.ca.mpf[,1] <- c("GeneSymbol",gene.symbol[set])
-  write.table(file=ofile,mm.ca.mpf,sep="\t",row.names=FALSE,col.names=FALSE,quote=FALSE)
+
+  ofile <- paste(outdir,"/",prefix,"booleMatWithGeneSymbols.tsv",sep="")
+  inMat.mpf[,1] <- c("GeneSymbol",gene.symbol[set])
+  write.table(file=ofile,inMat.mpf,sep="\t",row.names=FALSE,col.names=FALSE,quote=FALSE)
 
 }
