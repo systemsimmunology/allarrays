@@ -1,6 +1,5 @@
 
 
-eids <- intersect(ca,variable.genes)
 blank.conds <- names(which(apply(mm[eids,],2,sum)==0))
 var.conds <- names(which(apply(mm[eids,],2,sum)!=0))
 ## We will only use the var.conds from now on
@@ -8,32 +7,18 @@ var.conds <- setdiff(var.conds, "BMDM_Bl6_salmonella.flgBpEm62__Male" ) ## male 
 var.conds <- setdiff(var.conds, "BMDM_Bl6_Estradiol_Ifn gamma_Female" ) ## Identical to BMDM_Bl6_Ifn gamma__Male
 var.conds <- setdiff(var.conds, "mTEC_Bl6_X31 influenza__Female" ) ## Identical to mTEC_Bl6_PR8 influenza__Female
 
-## The number of conds for which each eid is on
-num.on.conds <- apply(mm[eids,var.conds],1,sum)
-## quite a few are expressed at <10 conditions
-## Could filter out those that are expressed in fewer than five conditions
-min.num.conds <- floor(0.05*ncol(mm))
-eids <- names(which(num.on.conds>min.num.conds))
-
-ofile <- paste(pdata.dir,"CAboole.tsv",sep="/")
-write.table(file=ofile,mm[intersect(ca,eids.on.both),],quote=FALSE,sep="\t")
-
-## For MATLAB write separate files with values and labels
-set <- intersect(ca,eids.on.both)
-ofile <- paste(pdata.dir,"CAbooleVals.tsv",sep="/")
-write.table(file=ofile,mm[set,],quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
-ofile <- paste(pdata.dir,"CAbooleGeneIDs.tsv",sep="/")
-write.table(file=ofile,cbind(set,gene.symbol[set]),quote=FALSE,sep="\t",row.names=FALSE,col.names=FALSE)
-
-
-
 ### Clustering of binary vectors
 
 ## Hamming distance and dendrogram of conditions
-hd.conds <- hamming.distance(t(mm[eids,var.conds])) ## requires library(e1071)
-dist.conds <- as.dist(hd.conds)
 
-#### equivalently, use manhattan distance
+##
+## Hamming distance
+##
+## Can be computed using the package e1071
+### hd.conds <- hamming.distance(t(mm[eids,var.conds])) ## requires library(e1071)
+### dist.conds <- as.dist(hd.conds)
+### 
+### equivalently, use manhattan distance
 dist.conds <- dist(t(mm[eids,var.conds]),method='manhattan')
 ### 'euclidian' also equivalent, after squaring the result ! 
 ###  'binary' seems to be #XOR/#OR so don't use that
@@ -91,7 +76,6 @@ image(t(mm[c2,dendrorder.conds]),col=collars,main="Cluster 2")
 c3 <- gene.eids[names(which(cmoc==3))]
 image(t(mm[c3,dendrorder.conds]),col=collars,main="Cluster 3")
 
-
 ##
 ## Multidimensional scaling
 ## http://www.statmethods.net/advstats/mds.html
@@ -109,22 +93,25 @@ text(x, y, labels=gene.symbol[eids],cex=0.9)
 # each row identified by a unique row name
 
 library(MASS)
+ 
+svec <- vector(length=10)
+svec <- 0
 
-fit <- isoMDS(dist.genes, k=2) # k is the number of dim
+for ( k in 1:10 ){
+  fit <- isoMDS(dist.genes, k=k) # k is the number of dim
+  svec[k] <- fit[["stress"]] 
+}
 
 # plot solution
 x <- fit$points[,1]
 y <- fit$points[,2]
+x11()
 plot(x, y, xlab="Coordinate 1", ylab="Coordinate 2", main="Nonmetric MDS", type="n")
 text(x, y, labels=gene.symbol[eids],cex=0.9)
-
-
-
 
 ##
 ## Clusters, conditions
 ##
-
 
 k=4
 hc.conds <- hclust( dist.conds, "complete" )

@@ -39,7 +39,6 @@ mm.cb <- sliceByAvailableRows(cb,mm)
 mm.cb <- diversify(mm.cb,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)
 writeBooleMat( mm.cb, prefix = "CB", outdir=pdata.dir )
 
-
 cat("\nTranscription Factor Activity\n")
 mm.tfa <- sliceByAvailableRows(tfa,mm)
 mm.tfa <- diversify(mm.tfa,col.on.min=0.05)
@@ -50,7 +49,7 @@ mm.ump <- sliceByAvailableRows(ump,mm)
 mm.ump <- diversify(mm.ump)
 writeBooleMat( mm.ump, prefix = "UMP", outdir=pdata.dir )
 
-cat("\nKEGG: Arichodinc Acid\n")
+cat("\nKEGG: Arachidonic Acid\n")
 mm.aacid <- sliceByAvailableRows(aacid,mm)
 mm.aacid <- diversify(mm.aacid) ## not a lot expressed at all
 ##mm.aacid <- diversify(mm.aacid,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)
