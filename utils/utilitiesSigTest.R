@@ -118,3 +118,46 @@ maxRatioMultipleCSSTs <- function ( eids, cssts, data.matrix=dm ) {
   }
 
 }
+
+
+meanAbsCSST <- function( eids, css.timecourse, data.matrix=dm ){
+  csst.label <- css.timecourse$name
+  cols <- css.timecourse[["DM Column"]]
+  nt <- length(cols)
+  if ( length(eids) == 1 ){
+    eid <- eids
+    tc <- data.matrix[eid,cols]
+    meanabs <- mean(tc)
+    retval <- meanabs
+    names(retval) <- csst.label
+  } else if ( length(eids) > 1 ){
+    tcs <- data.matrix[eids,cols]
+    meanabs <- apply(tcs,1,mean)
+    retval <- meanabs
+  } else {
+    stop("Error:Problem with Entrez IDs")
+  }
+  return (retval)
+}
+
+meanAbsMultipleCSSTs <- function ( eids, cssts, data.matrix=dm ) {
+  if ( length(eids) == 1){
+    avec <- numeric()
+    for ( csst in cssts ){    
+      aval <- meanAbsCSST(eid,csst,data.matrix=data.matrix)
+    }
+    return(avec)
+  }  else if ( length(eids) > 1 ){
+    amat <- numeric()
+    for ( csst in cssts ){
+      avals <- meanAbsCSST(eids,csst,data.matrix=data.matrix)
+      amat <- cbind(amat, avals)
+    }
+    colnames(amat) <- names(cssts)
+    return(amat)
+  } else {
+    stop("Error:Problem with Entrez IDs")
+  }
+
+}
+

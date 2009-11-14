@@ -18,6 +18,7 @@ cb <- as.character(read.table(paste(go.dir,"CytokineBinding.tsv",sep="/"),as.is=
 extcell <- as.character(read.table(paste(go.dir,"ExtracellularRegion.tsv",sep="/"),as.is=TRUE)$V1)
 tfa <-  as.character(read.table(paste(go.dir,"TranscriptionFactorActivity.tsv",sep="/"),as.is=TRUE)$V1)
 ##m2a <- as.character(read.table("/Users/thorsson/data/MacPolarization/WoundHealingM2a.tsv",as.is=TRUE,sep='\t',header=TRUE)[,"Gene.ID"])
+cdag <- as.character(read.table(file.path(Sys.getenv("DATA_DIR"),"CDAntigens/cd_mouse_entrezID"),as.is=TRUE)$V1)
 
 ## Arachidonic acid pathway
 library(KEGG.db)
@@ -36,7 +37,7 @@ writeBooleMat( mm.ca, prefix = "CA", outdir=pdata.dir )
 
 cat("\nCytokine Binding\n")
 mm.cb <- sliceByAvailableRows(cb,mm)
-mm.cb <- diversify(mm.cb,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)
+mm.cb <- diversify(mm.cb)
 writeBooleMat( mm.cb, prefix = "CB", outdir=pdata.dir )
 
 cat("\nTranscription Factor Activity\n")
@@ -54,6 +55,12 @@ mm.aacid <- sliceByAvailableRows(aacid,mm)
 mm.aacid <- diversify(mm.aacid) ## not a lot expressed at all
 ##mm.aacid <- diversify(mm.aacid,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)
 writeBooleMat( mm.aacid, prefix = "AACID", outdir=pdata.dir )
+
+cat("CD Antigens\n")
+mm.cdag <- sliceByAvailableRows(cdag,mm)
+mm.cdag <- diversify(mm.cdag) ## not a lot expressed at all
+##mm.cdag <- diversify(mm.cdag,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)
+writeBooleMat( mm.cdag, prefix = "CDAG", outdir=pdata.dir )
 
 
 

@@ -67,6 +67,7 @@ sum(mm[eid,dc.conds])/length(dc.conds)
 sum(mm[eid,bmdm.conds])/length(bmdm.conds)
 paste(mm[eid,dc.conds],collapse="")
 paste(mm[eid,bmdm.conds],collapse="")
+
 we <- names(sort(w,decreasing=TRUE)[1:25])
 
 x11()
@@ -116,5 +117,29 @@ x11()
 par(mfrow=c(2,1))
 hist(w, breaks=1:n.conds, xlim=c(90,100))
 hist(w.rand, breaks=1:n.conds, xlim=c(90,100))
+
+
+##
+## Magnitudes
+##
+
+eids <- rownames(mm.cdag)
+
+eids <- intersect(cdag,rownames(dm.exon))
+
+dcm <- meanAbsMultipleCSSTs(eids,CSSs.tc.exon[dcex],data.matrix=dm.exon)
+bm <- meanAbsMultipleCSSTs(eids,CSSs.tc.exon[bex],data.matrix=dm.exon)
+
+dcmm <- apply(dcm,1,mean)
+bmm <- apply(bm,1,mean)
+
+plot(dcmm,bmm,xlab="DC arrays, mean expression",ylab="BMDM arrays, mean expression",main="Expression of CD Antigens")
+text(dcmm,bmm,label=gene.symbol[eids],pos=4)
+abline(0,1)
+
+
+plot(log2(dcmm),log2(bmm),xlab="DC arrays, log2(mean expression)",ylab="BMDM arrays, log2(mean expression)",main="Expression of CD Antigens")
+text(log2(dcmm),log2(bmm),label=gene.symbol[eids],pos=4)
+abline(0,1)
 
 
