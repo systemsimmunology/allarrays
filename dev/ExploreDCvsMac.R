@@ -82,24 +82,78 @@ main <- paste(gene.symbol[eid],": BMDMs, 3 Prime Arrays", collapse=" ")
 gridPlotCSS(eid, CSSs.tc.b3p, data.matrix = dm.3prime,main=main, labvec=mm[eid,], ymax=max(dm.3prime.bmdm[eid,]))
 
 ### Which DC stims were also done for BMDM
+
+cc.bex <- character() ## conditions in common BMDM conds
+cc.dcex <- character() ## conditions in common DC conds
 for ( cond in dc.conds ){
   query <-  CSSs.tc[[cond]][c("Strain","Stimulus 1","Stimulus 2")]
   v <- inListSoft(query, CSSs.tc.exon[bex])
   if ( length(v) > 0 ) {
     cat("***",cond, "***\n")
     cat(names(CSSs.tc.exon[bex[v]]),"\n")
+    cc.bex <- c(cc.bex,bex[v])
+    cc.dcex <- c(cc.dcex,cond)
   }
 }
+## Note that the two are different in length as we
+## have both Male and Female for BMDM in some cases
 
-for ( cond in dc.conds ){
-  query <-  CSSs.tc[[cond]][c("Strain","Stimulus 1","Stimulus 2")]
-  v <- inListSoft(query, CSSs.tc.3prime[b3p])
-  if ( length(v) > 0 ) {
-    cat("***",cond, "***\n")
-    cat(names(CSSs.tc.3prime[b3p[v]]),"\n")
-  }
-}
 
+
+
+eids <- rownames(mm.cdag)
+eids <- intersect(cdag,rownames(dm.exon))
+
+##
+## Magnitudes
+##
+
+dcm <- meanAbsMultipleCSSTs(eids,CSSs.tc.exon[dcex],data.matrix=dm.exon)
+bm <- meanAbsMultipleCSSTs(eids,CSSs.tc.exon[bex],data.matrix=dm.exon)
+
+dcmm <- apply(dcm,1,mean)
+bmm <- apply(bm,1,mean)
+
+plot(dcmm,bmm,xlab="DC arrays, mean expression",ylab="BMDM arrays, mean expression",main="Expression of CD Antigens")
+text(dcmm,bmm,label=gene.symbol[eids],pos=4)
+abline(0,1)
+
+plot(log2(dcmm),log2(bmm),xlab="DC arrays, log2(mean expression)",ylab="BMDM arrays, log2(mean expression)",main="Expression of CD Antigens")
+text(log2(dcmm),log2(bmm),label=gene.symbol[eids],pos=4)
+abline(0,1)
+
+##
+## Induction Ratios
+##
+
+maxRatioMultipleCSSTs 
+
+dcm <- maxRatioMultipleCSSTs(eids,CSSs.tc.exon[cc.dcex],data.matrix=dm.exon)
+bm <- maxRatioMultipleCSSTs(eids,CSSs.tc.exon[cc.bex],data.matrix=dm.exon)
+
+dcmm <- apply(dcm,1,mean) ## Mean induction ratio for DCs, if that makes any sense
+bmm <- apply(bm,1,mean) ## Mean induction ratio for BMDMs, if that makes any sense
+
+x11()
+plot(dcmm,bmm,xlab="DC arrays, mean induction",ylab="BMDM arrays, mean induction",main="Expression of CD Antigens", xlim=c(0,10),ylim=c(0,10))
+text(dcmm,bmm,label=gene.symbol[eids],pos=4)
+abline(0,1)
+
+eid <- gene.eid["Tlr3"]
+x11()
+main <- paste(gene.symbol[eid],": DCs, Exon Arrays", collapse=" ")
+gridPlotCSS(eid, CSSs.tc.dcex[cc.dcex], data.matrix = dm.exon, main=main,labvec=mm[eid,], ymax=max(dm.exon.dc[eid,]))
+x11()
+main <- paste(gene.symbol[eid],": BMDMs, Exon Arrays", collapse=" ")
+gridPlotCSS(eid, CSSs.tc.bex[cc.bex], data.matrix = dm.exon, main=main, labvec=mm[eid,], ymax=max(dm.exon.bmdm[eid,]))
+
+
+
+##
+## Random trials
+##
+gene.symbol[eids],pos=4)
+abline(0,1)
 dc.conds.rand <- all.conds[sample(1:n.conds,n.dc)]
 bmdm.conds.rand <- setdiff(all.conds,dc.conds.rand)
 w.rand <- (n.bmdm - apply(mm[,bmdm.conds.rand],1,sum)) + apply(mm[,dc.conds.rand],1,sum)
@@ -117,29 +171,4 @@ x11()
 par(mfrow=c(2,1))
 hist(w, breaks=1:n.conds, xlim=c(90,100))
 hist(w.rand, breaks=1:n.conds, xlim=c(90,100))
-
-
-##
-## Magnitudes
-##
-
-eids <- rownames(mm.cdag)
-
-eids <- intersect(cdag,rownames(dm.exon))
-
-dcm <- meanAbsMultipleCSSTs(eids,CSSs.tc.exon[dcex],data.matrix=dm.exon)
-bm <- meanAbsMultipleCSSTs(eids,CSSs.tc.exon[bex],data.matrix=dm.exon)
-
-dcmm <- apply(dcm,1,mean)
-bmm <- apply(bm,1,mean)
-
-plot(dcmm,bmm,xlab="DC arrays, mean expression",ylab="BMDM arrays, mean expression",main="Expression of CD Antigens")
-text(dcmm,bmm,label=gene.symbol[eids],pos=4)
-abline(0,1)
-
-
-plot(log2(dcmm),log2(bmm),xlab="DC arrays, log2(mean expression)",ylab="BMDM arrays, log2(mean expression)",main="Expression of CD Antigens")
-text(log2(dcmm),log2(bmm),label=gene.symbol[eids],pos=4)
-abline(0,1)
-
 
