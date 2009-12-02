@@ -99,8 +99,6 @@ for ( cond in dc.conds ){
 ## have both Male and Female for BMDM in some cases
 
 
-
-
 eids <- rownames(mm.cdag)
 eids <- intersect(cdag,rownames(dm.exon))
 
@@ -126,27 +124,36 @@ abline(0,1)
 ## Induction Ratios
 ##
 
-maxRatioMultipleCSSTs 
-
-dcm <- maxRatioMultipleCSSTs(eids,CSSs.tc.exon[cc.dcex],data.matrix=dm.exon)
-bm <- maxRatioMultipleCSSTs(eids,CSSs.tc.exon[cc.bex],data.matrix=dm.exon)
+dcm <- log10(maxRatioMultipleCSSTs(eids,CSSs.tc.exon[cc.dcex],data.matrix=dm.exon))
+bm <- log10(maxRatioMultipleCSSTs(eids,CSSs.tc.exon[cc.bex],data.matrix=dm.exon))
 
 dcmm <- apply(dcm,1,mean) ## Mean induction ratio for DCs, if that makes any sense
 bmm <- apply(bm,1,mean) ## Mean induction ratio for BMDMs, if that makes any sense
 
 x11()
-plot(dcmm,bmm,xlab="DC arrays, mean induction",ylab="BMDM arrays, mean induction",main="Expression of CD Antigens", xlim=c(0,10),ylim=c(0,10))
+plot(dcmm,bmm,xlab="DC arrays, mean induction",ylab="BMDM arrays, mean induction",main="Expression of CD Antigens", xlim=c(0,2),ylim=c(0,2))
 text(dcmm,bmm,label=gene.symbol[eids],pos=4)
 abline(0,1)
 
-eid <- gene.eid["Tlr3"]
-x11()
+load("/Users/thorsson/allarrays/annotation/masculinity.RData")
+load("/Users/thorsson/allarrays/annotation/femininity.RData")
+mcut <- mean(masculinity)+2*sd(masculinity)
+fcut <- mean(femininity)+2*sd(femininity)
+
+eid <- gene.eid["Cd80"]
+
+if ( masculinity[eid] > mcut ){cat("warning: Gene may be Male-specific")}
+if ( femininity[eid] > fcut ){cat("warning: Gene may be Female-specific")}
+                        
+useplotwins <- TRUE
+
+if ( useplotwins ){ dev.set(3) } else { x11() } 
 main <- paste(gene.symbol[eid],": DCs, Exon Arrays", collapse=" ")
 gridPlotCSS(eid, CSSs.tc.dcex[cc.dcex], data.matrix = dm.exon, main=main,labvec=mm[eid,], ymax=max(dm.exon.dc[eid,]))
-x11()
+
+if ( useplotwins ){ dev.set(4) } else { x11() } 
 main <- paste(gene.symbol[eid],": BMDMs, Exon Arrays", collapse=" ")
 gridPlotCSS(eid, CSSs.tc.bex[cc.bex], data.matrix = dm.exon, main=main, labvec=mm[eid,], ymax=max(dm.exon.bmdm[eid,]))
-
 
 
 ##
