@@ -140,7 +140,7 @@ load("/Users/thorsson/allarrays/annotation/femininity.RData")
 mcut <- mean(masculinity)+2*sd(masculinity)
 fcut <- mean(femininity)+2*sd(femininity)
 
-eid <- gene.eid["Cd80"]
+eid <- gene.eid["Cd38"]
 
 if ( masculinity[eid] > mcut ){cat("warning: Gene may be Male-specific")}
 if ( femininity[eid] > fcut ){cat("warning: Gene may be Female-specific")}

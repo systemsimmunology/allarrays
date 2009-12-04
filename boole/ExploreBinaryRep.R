@@ -60,6 +60,25 @@ heatmap(t(log(maxes[genes.for.plot,])),scale="none",margins=c(15,15),cexCol=0.9,
 table(unlist(lapply(CSSs.tc,"[[","Strain")))
 
 
+##
+## Explore results of influence graph
+## 
+
+minf <- as.matrix(read.table("/Volumes/ILYA LAB/Cytokine\ network/Matlab/G.tsv",sep="\t",as.is=TRUE))      
+ca <- rownames(mm.ca)
+colnames(minf) <- ca
+rownames(minf) <- ca
+
+## top influences
 
 
-      
+winners <- matrixExtrema(minf,10,decreasing=TRUE)$pairs
+
+cl <- integer()
+for ( i in 1:nrow(winners) ){
+  one <- winners[i,1]
+  two <- winners[i,2]
+  ds <- dist.genes.mat[one,two]
+  cat(gs[one],"->",gs[two],"\t",minf[one,two],"\t",ds,"\n")
+  cl <- c(cl,ds)
+}
