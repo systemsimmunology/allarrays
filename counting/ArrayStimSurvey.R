@@ -3,19 +3,18 @@ library(httpRequest)
 library(chron)
 
 util.dir <- file.path(Sys.getenv("AA"),"utils")
-source(file.path(Sys.getenv("HOME"),"bin/R/MatrixPrintFormat.R"))
+source(file.path(Sys.getenv("HOME"),"bin/R/functions/matrixUtils.R"))
 source(paste(util.dir,"httpget.R",sep="/"))
 source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 source(paste(util.dir,"utilitiesSampleGroup.R",sep="/"))
 
-timefilter <- FALSE
+timefilter <- TRUE
 debug <- FALSE
 
 if ( timefilter ){
-  ##the period from March 1, 2009 - August 30, 2009 (Not sure about this!)
   ## format m/d/y
-  startDate <- "9/1/09"
-  endDate <- "10/30/09"
+  startDate <- "8/29/09"
+  endDate <- "2/28/10"
 }
 
 ##term.array="/sampleData/microarray/chips/Mouse 430 2.0"
@@ -46,8 +45,8 @@ if ( timefilter ){
 ##term.t="\"0120\""
 ##names(term.t)="Time 1" 
 
-term.array="/sampleData/microarray/chips/Mouse 430 2.0"
-##term.array="/sampleData/microarray/chips/Mouse Exon"
+##term.array="/sampleData/microarray/chips/Mouse 430 2.0"
+term.array="/sampleData/microarray/chips/Mouse Exon"
 names(term.array) = "chip"
 termlist <- list()
 termlist[[1]] <- term.array
@@ -57,6 +56,8 @@ obj.1 <- searchByNameValue(termListHttpForm(termlist))
 ##length(obj.1) is 600 on 7-24-09 for exon arrays
 ##length(obj.1) is 648 on 8-30-09 for exon arrays
 ##length(obj.1) is 672 on 9-30-09 for exon arrays
+##length(obj.1) is 752 on 2-09-10 for exon arrays
+
 
 if ( timefilter ){
   ## Filter by time if desired

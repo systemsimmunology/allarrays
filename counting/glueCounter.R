@@ -17,10 +17,16 @@ startDate <- "8/30/08"
 endDate <- "2/28/09"
 
 
-##the period from March 1, 2008 - August 29, 2009 (Not sure about this!)
+##the period from March 1, 2008 - August 29, 2009 
 ## format m/d/y
 startDate <- "3/1/09"
 endDate <- "8/29/09"
+
+
+##the period from August 29, 2009 - February 28, 2010 
+## format m/d/y
+startDate <- "8/29/09"
+endDate <- "2/28/10"
 
 chips <- c("Mouse Exon","Mouse 430 2.0","Mouse Promoter 1.0R","Isbimm","Human U133 Plus 2.0","Human U133A","Human Exon","Rhesus Macaque")
 

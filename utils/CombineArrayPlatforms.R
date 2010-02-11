@@ -63,6 +63,7 @@ load(paste(data.path.exon,"CSSs.tc.RData",sep="/"))
 ## 5-2-09 Exon Set: 82 timecourses
 ## 8-22-09 Exon Set: 98 timecourses
 ## 10-15-09 Exon Set: 101 timecoures
+## 1-25-10. That last number now appears to be 98, but differs from 8-22-09
 ##lung.conds <- names(which(unlist(lapply(CSSs.tc,"[[","Cell Type"))=="Lung"))
 ##CSSs.tc <- CSSs.tc[setdiff(names(CSSs.tc),lung.conds)]
 ## removed 3
