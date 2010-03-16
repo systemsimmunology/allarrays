@@ -15,6 +15,8 @@ if ( timefilter ){
   ## format m/d/y
   startDate <- "8/29/09"
   endDate <- "2/28/10"
+  ##startDate <- "1/1/01"
+  ##endDate <- "1/1/15"
 }
 
 ##term.array="/sampleData/microarray/chips/Mouse 430 2.0"

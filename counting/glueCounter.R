@@ -4,7 +4,7 @@ library(httpRequest)
 library(chron)
 
 util.dir <- file.path(Sys.getenv("AA"),"utils")
-source(file.path(Sys.getenv("HOME"),"bin/R/MatrixPrintFormat.R"))
+source(file.path(Sys.getenv("HOME"),"bin/R/functions/matrixUtils.R"))
 source(paste(util.dir,"httpget.R",sep="/"))
 source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 
@@ -27,6 +27,12 @@ endDate <- "8/29/09"
 ## format m/d/y
 startDate <- "8/29/09"
 endDate <- "2/28/10"
+
+
+## All arrays
+## format m/d/y
+startDate <- "1/1/01"
+endDate <- "1/1/15"
 
 chips <- c("Mouse Exon","Mouse 430 2.0","Mouse Promoter 1.0R","Isbimm","Human U133 Plus 2.0","Human U133A","Human Exon","Rhesus Macaque")
 
