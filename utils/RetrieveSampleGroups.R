@@ -13,8 +13,8 @@ data.path <- "."
 
 ##test values
 
-data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-10-15_at_16.51.44"
-sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-10-15_at_16.51.44/output/Mouse Exon/sampleGlossary"
+#data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-10-15_at_16.51.44"
+#sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-10-15_at_16.51.44/output/Mouse Exon/sampleGlossary"
 
 ##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09"
 ##sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-08-22_at_09.20.09/output/Mouse Exon/sampleGlossary"
@@ -26,8 +26,8 @@ sg.path <- "/sampleData/microarray/runs/AutomaticTasks - Gene-Level Exon Pipelin
 ##sg.path <- "/ExpressionSets/GeneLevel/Genomics Expression Public Dataset/sampleGlossary"
 
 ##test values
-##data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/Aderem Three Prime Arrays_2009-05-07_at_00.06.21/output/Mouse 430 2.0"
-##sg.path <- "/sampleData/microarray/runs/Aderem Three Prime Arrays_2009-05-07_at_00.06.21/output/Mouse 430 2.0/sampleGlossary"
+data.path <- "/Volumes/ILYA LAB/Vesteinn/data/ImmunoRepository/sampleData/microarray/runs/Aderem Three Prime Arrays_2009-05-07_at_00.06.21/output/Mouse 430 2.0"
+sg.path <- "/sampleData/microarray/runs/Aderem Three Prime Arrays_2009-05-07_at_00.06.21/output/Mouse 430 2.0/sampleGlossary"
 
 library(rjson)
 util.dir <- file.path(Sys.getenv("AA"),"utils")

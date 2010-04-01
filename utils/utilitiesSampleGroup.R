@@ -18,7 +18,14 @@ parseSampleGroup <- function ( sampleGroup ){
     toks <- strsplit(uri.long,"/")[[1]]
     ntoks <- length(toks)
     uri <- toks[ntoks]
-    sglist[[group]] <- getNodeObject(uri)
+    gno <- getNodeObject(uri)
+    sglist[[group]] <- gno
+    v <- character()
+    for(uuid in gno$sampleUUIDs){
+      rdp <- getNodeObject(uuid)[["raw_data_path"]]
+      v <- c(v,rdp)
+    }
+    sglist[[group]][["raw_data_path"]] <- v
   }
   return(sglist)
 }
