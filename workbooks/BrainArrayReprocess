@@ -1,0 +1,16 @@
+
+April 5, 2010
+-------------
+
+On unix machine
+
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_unix ~/allarrays/processed_data ~/allarrays/tmp 
+
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix ~/allarrays/processed_data ~/allarrays/tmp
+
+
+On os x  machine
+
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_OS_X ~/allarrays/processed_data ~/allarrays/tmp 
+
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_OS_X ~/allarrays/processed_data ~/allarrays/tmp

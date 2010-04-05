@@ -4,6 +4,8 @@
 library(affy)
 library(mouse4302mmentrezgcdf) ## R CMD INSTALL mouse4302mmentrezgcdf_12.1.0.tar.gz
 
+library(mogene10stv1mmentrezgcdf)
+
 ca <- commandArgs()
 
 filelist <- ca[5]
@@ -19,6 +21,7 @@ rawdata<-ReadAffy(filenames=filenames,celfile.path=celfile.path )
 
 ## Change to custom CDF 
 rawdata@cdfName <- "Mouse4302_Mm_ENTREZG"
+rawdata@cdfName <- "MoGene10stv1_Mm_ENTREZG"
 
 ## Background correct, Normalize, Probeset Summarize
 eset <- rma(rawdata) ## rma or gcrma
