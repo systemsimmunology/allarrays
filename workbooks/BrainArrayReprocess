@@ -4,13 +4,19 @@ April 5, 2010
 
 On unix machine
 
-arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_unix ~/allarrays/processed_data ~/allarrays/tmp 
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_unix "Mouse4302_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp 
 
-arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix ~/allarrays/processed_data ~/allarrays/tmp
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix "MoGene10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
 
 
 On os x  machine
 
-arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_OS_X ~/allarrays/processed_data ~/allarrays/tmp 
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_OS_X "Mouse4302_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp 
 
-arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_OS_X ~/allarrays/processed_data ~/allarrays/tmp
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_OS_X "MoGene10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
+
+Tests
+
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_OS_X_3 "Mouse4302_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
+
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_unix_3 "Mouse4302_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp

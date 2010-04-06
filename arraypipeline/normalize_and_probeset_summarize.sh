@@ -1,18 +1,18 @@
 #!/bin/bash
 
 WRONGARGS=1
-if [ $# != 3 ]
+if [ $# != 4 ]
 then
-  echo "Usage: `basename $0` <CEL File list with full paths> <Destination directory> <Temporary Working directory (Created and Deleted)>" >&2
+  echo "Usage: `basename $0` <CEL File list with full paths> <cdfName> <Destination directory> <Temporary Working directory (Created and Deleted)>" >&2
   exit $WRONGARGS
 fi
 
 cellist=$1
-OUTDIR=$2
-TEMPDIR=$3
+cdfName=$2
+OUTDIR=$3
+TEMPDIR=$4
 
 ORIGDIR=`echo $PWD`
-#TEMPDIR="./tmp"
 
 mkdir $TEMPDIR
 cd $TEMPDIR
@@ -30,7 +30,7 @@ for (( i=0 ; i<$nc ; i++ )); do
     ln -s $cfile_i .
 done
 
-R --vanilla --slave --args filelist . < $AA/arraypipeline/normalize_and_probeset_summarize.R
+R --vanilla --slave --args filelist . $cdfName  < $AA/arraypipeline/normalize_and_probeset_summarize.R
 
 ## Move files out of Temp dir and clean up
 mv emat.RData $OUTDIR
