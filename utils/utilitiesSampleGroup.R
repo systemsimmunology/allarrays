@@ -3,6 +3,25 @@
 ##library(rjson)
 ##source("httpget.R")
 
+# read sample group from tab-delimited file
+readSGfromfile <- function( file ){
+  
+  rt <- read.table(file,
+                   as.is=TRUE,sep="\t",
+                   header=TRUE,colClasses="character")  
+  ss <- readLines(file,n=1)
+  names(rt) <- strsplit(ss,split="\t")[[1]]
+
+  sglist <- list()
+  for ( i in 1:nrow(rt)){
+    gr <- rt[i,"Group"]
+    sglist[[gr]] <- as.list(rt[i,2:ncol(rt)])
+  }
+
+  sglist
+}
+
+
 ## Parse Sample group object retrieved from JCR
 ## Input: Sample Group object from JCR
 ## Output: The actual sample groups, which

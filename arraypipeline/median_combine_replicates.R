@@ -12,10 +12,11 @@ v <- rt$V2
 names(v) <- rt$V1
 uvs <- unique(v)
 
-## Load Expression Matrix before replicate combination
-load("~/allarrays/tmp/emat.RData")
-
-rt <- as.matrix(read.table("~/allarrays/tmp/emat.tsv",as.is=TRUE,colClasses = "character"))
+emat <- as.matrix(read.table(expfile,as.is=TRUE))
+## More faithful version of columns headers takes care of
+## R incorrectly inserts X before colheaders that begin with a number
+## and converting "-" to "."
+colnames(emat) <- strsplit(readLines(expfile,n=1),'\t')[[1]][-1]
 
 ## 
 h <- numeric()
@@ -26,6 +27,7 @@ for ( uv in uvs ){
 }
 colnames(h) <- uvs
 
+matrixPrintFormat <- 
 function( matrix,topLeftString="" ){
   rownames <- rownames(matrix)
   colnames <- colnames(matrix)
@@ -36,8 +38,6 @@ function( matrix,topLeftString="" ){
   return(outMat)
 }
 
-eemat <- h
-
-write.table(matrixPrintFormat(h),file="eemat.tsv",sep="\t",quote=FALSE,row.names = FALSE, col.names = FALSE)
-save(eemat,file="eemat.RData")
+write.table(matrixPrintFormat(h),file=outfile,sep="\t",quote=FALSE,row.names = FALSE, col.names = FALSE)
+##save(eemat,file="eemat.RData")
 

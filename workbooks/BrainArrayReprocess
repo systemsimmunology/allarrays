@@ -1,4 +1,26 @@
 
+
+April 6, 2010
+-------------
+
+cd $AA/processed_data/LPSExon
+awk '{print $1}' eemat.tsv | sed 's/\_at//g' | tail +2 > MoGene10stv1_Mm_ENTREZG_eid
+## might be better to get that from bioconductor
+~/bin/reMap.py MoGene10stv1_Mm_ENTREZG_eid 1 ~/data/ncbi/gene_info_simplified_mouse 1 2 > MoGene10stv1_Mm_ENTREZG_symbol
+
+cd $AA/processed_data/LPSThreePrime
+awk '{print $1}' eemat.tsv | sed 's/\_at//g' | tail +2 > MoGene4302_Mm_ENTREZG_eid
+## might be better to get that from bioconductor
+~/bin/reMap.py MoGene4302_Mm_ENTREZG_eid 1 ~/data/ncbi/gene_info_simplified_mouse 1 2 > MoGene4302_Mm_ENTREZG_symbol
+Includes 64 AFFX
+
+Replicate combination
+
+R --vanilla --slave --args $AA/processed_data/LPSThreePrime/emat.tsv $AA/auxfiles/LPSthreePrimeCelFiles-groupings.tsv $AA/processed_data/LPSThreePrime/eemat.tsv  < median_combine_replicates.R
+
+R --vanilla --slave --args $AA/processed_data/LPSExon/emat.tsv $AA/auxfiles/LPSexonCelFiles-groupings.tsv $AA/processed_data/LPSExon/eemat.tsv  < median_combine_replicates.R
+
+
 April 5, 2010
 -------------
 
@@ -8,15 +30,8 @@ arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreeP
 
 arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix "MoGene10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
 
-
 On os x  machine
 
 arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_OS_X "Mouse4302_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp 
 
 arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_OS_X "MoGene10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
-
-Tests
-
-arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_OS_X_3 "Mouse4302_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
-
-arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_unix_3 "Mouse4302_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
