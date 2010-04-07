@@ -1,4 +1,18 @@
 
+April 7, 2010
+-------------
+
+awk '{print $1}' eemat.tsv | tail +2 > MoGene10stv1_Mm_ENTREZG_psid
+
+awk '{print $1}' eemat.tsv | tail +2 > MoGene10stv1_Mm_ENTREZG_psid
+
+paste MoGene10stv1_Mm_ENTREZG_psid MoGene10stv1_Mm_ENTREZG_eid > MoGene10stv1_Mm_ENTREZG_mapfile
+
+*** Need to have non-zero upper left in matrix for this to work. Inserted ProbesetID by hand for now
+
+~/bin/reMap.py eemat.tsv 1 MoGene10stv1_Mm_ENTREZG_mapfile 1 2 > expmat.tsv
+
+R --vanilla --slave < ../../utils/ExpmatToDM.R 
 
 April 6, 2010
 -------------

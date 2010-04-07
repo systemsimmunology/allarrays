@@ -1,6 +1,5 @@
-
 ##
-## Read sample groups. Arrange into time-courses
+## Retrieve sample groups from repository. Arrange into time-courses
 ##
 ## Invoke using 
 ## R --arch x86_64 --slave --args "Full JCR Path To Sample Group" < RetrieveSampleGroups.R 
@@ -82,7 +81,7 @@ if(file.access(ztname)==0) {
 }
 
 ### Add zero Times to time course objects
-CSSs.tc <- includeZeroTime( CSSs.tc )
+CSSs.tc <- includeZeroTime( CSSs.tc , zeroTimes)
 
 save(CSSs.tc,file="CSSs.tc.RData")
 

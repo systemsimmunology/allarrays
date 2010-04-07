@@ -16,6 +16,7 @@ readSGfromfile <- function( file ){
   for ( i in 1:nrow(rt)){
     gr <- rt[i,"Group"]
     sglist[[gr]] <- as.list(rt[i,2:ncol(rt)])
+    sglist[[gr]]$name <- gr
   }
 
   sglist
@@ -325,7 +326,7 @@ findTimeZero <- function( CSSs, sglist, zfile = NULL ) {
 ## Let's take the newer one:
 ## "Dicer-fl-fl-LyszCre+--______BMDM_Mouse"
 
-includeZeroTime <- function ( CSS.timecourse ) {
+includeZeroTime <- function ( CSS.timecourse, zeroTimes=zeroTimes ) {
   
   for ( csst.name in names(CSS.timecourse) ){ ## these are just stimmed at this point
     csst <- CSS.timecourse[[csst.name]]
