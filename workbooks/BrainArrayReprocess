@@ -2,16 +2,23 @@
 April 7, 2010
 -------------
 
-awk '{print $1}' eemat.tsv | tail +2 > MoGene10stv1_Mm_ENTREZG_psid
+cd data/20100407.curated.exon 
+R --slave --args ../../auxfiles/LPSexonCelFiles-GroupMetaData.tsv < ../../utils/ReadSampleGroup.R
 
 awk '{print $1}' eemat.tsv | tail +2 > MoGene10stv1_Mm_ENTREZG_psid
-
 paste MoGene10stv1_Mm_ENTREZG_psid MoGene10stv1_Mm_ENTREZG_eid > MoGene10stv1_Mm_ENTREZG_mapfile
-
 *** Need to have non-zero upper left in matrix for this to work. Inserted ProbesetID by hand for now
-
 ~/bin/reMap.py eemat.tsv 1 MoGene10stv1_Mm_ENTREZG_mapfile 1 2 > expmat.tsv
+R --vanilla --slave < ../../utils/ExpmatToDM.R 
 
+
+cd data/20100407.curated.3prime
+R --slave --args ../../auxfiles/LPSthreePrimeCelFiles-GroupMetaData.tsv < ../../utils/ReadSampleGroup.R
+
+awk '{print $1}' eemat.tsv | tail +2 > MoGene4302_Mm_ENTREZG_psid
+paste MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_eid > MoGene4302_Mm_ENTREZG_mapfile
+*** Need to have non-zero upper left in matrix for this to work. Inserted ProbesetID by hand for now
+~/bin/reMap.py eemat.tsv 1 MoGene4302_Mm_ENTREZG_mapfile 1 2 > expmat.tsv
 R --vanilla --slave < ../../utils/ExpmatToDM.R 
 
 April 6, 2010
