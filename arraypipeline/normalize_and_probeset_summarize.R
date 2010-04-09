@@ -12,6 +12,9 @@ filelist <- ca[5]
 celfile.path <- ca[6]
 cdfName <- ca[7]
 
+library(gcrma)
+
+
 ## Arguments for ReadAffy
 ## Filename to specify files and filename order
 filenames <- as.vector(read.table(filelist,as.is=TRUE)$V)

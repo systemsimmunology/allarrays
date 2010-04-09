@@ -1,0 +1,28 @@
+
+Obtain from Romulus
+/local/DiffEx/data/affy/MmExon/library/MoEx-1_0-st-v1.na27.mm9.transcript.csv
+
+MoEx-1_0-st-v1.na27.mm9.transcript.csv
+
+tail -n +21 MoEx-1_0-st-v1.na27.mm9.transcript.csv > MoEx-1_0-st-v1.na27.mm9.transcript.nopreamble.csv
+
+Columns
+1 transcript_cluster_id,
+2 probeset_id,
+3 seqname - this is actually the chromosome
+4 strand,
+5 start,
+6 stop,
+7 total_probes,
+8 gene_assignment: complex // separated, usually begins with transcript
+9 mrna_assignment: more amazingly complex
+swissprot,unigene,GO_biological_process,GO_cellular_component,GO_molecular_function,pathway,protein_domains,category
+
+Checked that the colums transcript_cluster_id and probeset_id are identical
+awk -F "," '{print $1}' MoEx-1_0-st-v1.na27.mm9.transcript.nopreamble.csv | sed 's/\"//g' > probeset_id
+
+Column eight, first entry
+
+awk -F "," '{print $8}' MoEx-1_0-st-v1.na27.mm9.transcript.nopreamble.csv | sed 's/\"//g' | awk -F "//" '{OFS="\t";print $1}' > t8
+
+

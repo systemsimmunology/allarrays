@@ -7,7 +7,9 @@ R --slave --args ../../auxfiles/LPSexonCelFiles-GroupMetaData.tsv < ../../utils/
 
 awk '{print $1}' eemat.tsv | tail +2 > MoGene10stv1_Mm_ENTREZG_psid
 paste MoGene10stv1_Mm_ENTREZG_psid MoGene10stv1_Mm_ENTREZG_eid > MoGene10stv1_Mm_ENTREZG_mapfile
-*** Need to have non-zero upper left in matrix for this to work. Inserted ProbesetID by hand for now
+Insert this header by and for now
+ProbesetID      EntrezID
+*** Need to have non-zero upper left in eemat matrix for this to work. Inserted ProbesetID by hand for now
 ~/bin/reMap.py eemat.tsv 1 MoGene10stv1_Mm_ENTREZG_mapfile 1 2 > expmat.tsv
 R --vanilla --slave < ../../utils/ExpmatToDM.R 
 
@@ -55,4 +57,4 @@ On os x  machine
 
 arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSthreePrimeCelFiles_OS_X "Mouse4302_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp 
 
-arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_OS_X "MoGene10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
+
