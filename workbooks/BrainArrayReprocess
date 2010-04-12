@@ -31,7 +31,10 @@ R --vanilla --slave < $AA/utils/ExpmatToDM.R
 cd data/20100407.curated.3prime
 R --slave --args ../../auxfiles/LPSthreePrimeCelFiles-GroupMetaData.tsv < ../../utils/ReadSampleGroup.R
 awk '{print $1}' eemat.tsv | tail +2 > MoGene4302_Mm_ENTREZG_psid
+awk '{print $1}' eemat.tsv | sed 's/\_at//g' | tail +2 > MoGene4302_Mm_ENTREZG_eid
 paste MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_eid > MoGene4302_Mm_ENTREZG_mapfile
+Insert this header by and for now
+ProbesetID      EntrezID
 *** Need to have non-zero upper left in matrix for this to work. Inserted ProbesetID by hand for now
 ~/bin/reMap.py eemat.tsv 1 MoGene4302_Mm_ENTREZG_mapfile 1 2 > expmat.tsv
 R --vanilla --slave < ../../utils/ExpmatToDM.R 
