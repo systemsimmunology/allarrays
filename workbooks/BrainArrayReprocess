@@ -1,4 +1,18 @@
 
+
+April 20, 2010
+--------------
+
+We will need to be getting rid of AFFX probes
+
+Line number of first AFFX probe
+
+cat -n emat.tsv | grep AFFX | awk '{print $1}' | head -1
+
+
+head -16332 emat.tsv  > tempfile
+mv -f tempfile emat.tsv 
+
 April 12, 2010
 --------------
 
