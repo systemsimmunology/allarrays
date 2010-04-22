@@ -1,4 +1,13 @@
 
+April 21, 2010
+--------------
+In any directory do
+../VERASAMpipeline.sh $HOME/allarrays/data/20100407.curated.3prime/emat.tsv /Users/thorsson/allarrays/auxfiles/LPSthreePrimeCelFiles-groupings.tsv BMDM_Bl6_LPS_0000___Female
+cp expression.mus /Users/thorsson/allarrays/data/20100407.curated.3prime/LPS.mus
+cp expression.log10_ratios /Users/thorsson/allarrays/data/20100407.curated.3prime/LPS.log10_ratios
+cp expression.lambdas /Users/thorsson/allarrays/data/20100407.curated.3prime/LPS.lambdas      
+cp expression.muStandardErrors /Users/thorsson/allarrays/data/20100407.curated.3prime/LPS.muStandardErrors
+
 
 April 20, 2010
 --------------

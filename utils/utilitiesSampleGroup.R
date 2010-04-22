@@ -403,7 +403,8 @@ DMcolsFromSG <- function ( sglist, columns, exon.form=TRUE  ) {
   return(dmcol.from.sg)
 
 }
-  
+
+
 writeCSSTCs <- function( CSSs.tc, file="CSSTCs.tsv" ){
   zz <- file(file, "w")
   header <- paste(names(CSSs.tc[[1]]),collapse="\t")
@@ -415,4 +416,50 @@ writeCSSTCs <- function( CSSs.tc, file="CSSTCs.tsv" ){
     write(rowstring,file=zz)
   }
   close(zz)
+}
+
+## Get cel files locations (raw data path)
+## according to metadata in a time corse
+## Include option of output to file
+## chip should be either "Mouse 430 2.0" or "Mouse Exon" (check)
+celFilesFromCSSTCs <- function( tc, file=NULL){
+
+  term.array <- "/sampleData/microarray/chips/Mouse 430 2.0"
+  names(term.array) = "chip"
+  term.ct=tc[["Cell Type"]]
+  names(term.ct)="Cell Type"
+  term.str=tc[["Strain"]]
+  names(term.str)="Strain"  
+  term.stim=tc[["Stimulus 1"]]
+  names(term.stim)="Stimulus 1"
+
+  termlist <- list()
+  termlist[[1]] <- term.array
+  termlist[[2]]=term.ct
+  termlist[[3]]=term.str
+  termlist[[4]]=term.stim
+  
+  termlist[[5]]=NULL
+  collect <- character()
+  for (t in tc[["Time 1"]]) {
+    ## t is an integer which we need to convert to term.t="\"0020\""
+    pre <- paste(rep("0",4-nchar(as.character(t))),collapse="")
+    term.t <- paste(c("\"",pre,as.character(t),"\""),collapse="")
+    names(term.t)="Time 1"
+    termlist[[5]] <- term.t
+    objs  <- searchByNameValue(termListHttpForm(termlist))
+
+    removeStim2SG
+    
+    for (obj in objs){
+      collect <- c(collect,obj[["raw_data_path"]])
+    }
+  }
+
+  collect
+
+  if (!is.null(file)){
+    write.table(collect,file=file,quote=FALSE,row.names=FALSE,col.names=FALSE)
+  }
+    
 }
