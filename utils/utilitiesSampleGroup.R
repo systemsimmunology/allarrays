@@ -55,8 +55,12 @@ removeStim2SG <- function ( sglist.in ){
   ## These include the string "NULL"
   sg.stim2 <- as.character(lapply(sglist.in,"[[","Stimulus 2"))
   have.stim2 <- which(sg.stim2 != "NULL")
-  ## Let's remove these
-  sglist <- sglist.in[-have.stim2 ]
+  if ( length(have.stim2) > 0){
+    ## Let's remove these
+    sglist <- sglist.in[-have.stim2 ]
+  } else {
+    sglist <- sglist.in
+  }
   return(sglist)
 }  
 
@@ -422,6 +426,10 @@ writeCSSTCs <- function( CSSs.tc, file="CSSTCs.tsv" ){
 ## according to metadata in a time corse
 ## Include option of output to file
 ## chip should be either "Mouse 430 2.0" or "Mouse Exon" (check)
+
+##
+## Currently geared only to single stim
+
 celFilesFromCSSTCs <- function( tc, file=NULL){
 
   term.array <- "/sampleData/microarray/chips/Mouse 430 2.0"
@@ -448,8 +456,7 @@ celFilesFromCSSTCs <- function( tc, file=NULL){
     names(term.t)="Time 1"
     termlist[[5]] <- term.t
     objs  <- searchByNameValue(termListHttpForm(termlist))
-
-    removeStim2SG
+    objs <- removeStim2SG(objs) ## as these are returned during search
     
     for (obj in objs){
       collect <- c(collect,obj[["raw_data_path"]])

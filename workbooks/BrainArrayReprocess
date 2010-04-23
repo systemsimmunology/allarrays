@@ -1,3 +1,24 @@
+April 23, 2010
+--------------
+
+In auxfiles
+
+MyD88 KO
+ls /net/arrays/Affymetrix/core/probe_data/200502/*CEL | grep MyD88 | grep "\-0" > tempfile
+ls $NAP/200502/*CEL | grep MyD88 | grep "\-0" > tempfile
+
+cat tempfile MyD88LPSthreePrimeCelFiles_unix MyD88PAM3threePrimeCelFiles_unix MyD88PolyICthreePrimeCelFiles_unix > MyD88threePrimeCelFiles_unix
+rm -f tempfile
+
+cat TRIFLPSthreePrimeCelFiles_unix TRIFPAM2threePrimeCelFiles_unix > TRIFthreePrimeCelFiles_unix
+
+
+cat LPSthreePrimeCelFiles_unix PAM2threePrimeCelFiles_unix PAM3threePrimeCelFiles_unix PolyICthreePrimeCelFiles_unix R848threePrimeCelFiles_unix CpGthreePrimeCelFiles_unix MyD88threePrimeCelFiles_unix TRIFthreePrimeCelFiles_unix > OriginalThreePrimeCelFiles_unix
+
+Normalize all 
+
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/OriginalThreePrimeCelFiles_os_x "Mouse4302_Mm_ENTREZG" ~/allarrays/data ~/allarrays/tmp >& OriginalThreePrime.logfile & 
+
 
 April 21, 2010
 --------------
