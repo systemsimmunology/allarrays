@@ -7,12 +7,12 @@
 
 import sys
 
-#if (len (sys.argv) != 2):
-#  print 'error!  usage: createHeaders.py <Group file>\n'
-#  sys.exit ()
-# groupfile = sys.argv[1]
+if (len (sys.argv) != 2):
+    print 'error!  usage: createHeaders.py <Group file>\n'
+    sys.exit ()
+groupfile = sys.argv[1]
 
-groupfile = "/Users/thorsson/allarrays/auxfiles/LPSthreePrimeCelFiles-groupings.tsv" 
+##groupfile = "/Users/thorsson/allarrays/auxfiles/LPSthreePrimeCelFiles-groupings.tsv" 
 
 ## Read in group file
 lines = open(groupfile).read().split('\n')
