@@ -16,28 +16,47 @@ basename <- function(path){
 }
 
 ## utility function for creating cel file matrix )
-celMat <- function( stim, times, zerotconds, sex="Female" ){
+celMat <- function( stim, times, zerotconds=NULL, sex="Female",strain="Bl6",label=NULL ){
   tc <- list()
   tc[["Cell Type"]] <- "BMDM"
-  tc[["Strain"]] <- "Bl6"
+  tc[["Strain"]] <- strain
   tc[["Stimulus 1"]] <- stim
   tc[["Sex"]] <- sex
   tc[["Time 1"]] <- times
   res <- celFilesFromCSSTCs(tc)
-  if ( stim == "Poly IC" ){
-    stim <- "Poly-IC"
+  stim <- dashify(stim)
+  strain <- dashify(strain)
+  if ( !is.null(zerotconds) ){
+    zstring <- paste(c("BMDM_",strain,"_",stim,"_0000___",sex),collapse="")
+    res <- rbind(cbind(zstring,zerotconds),res)
   }
-  zstring <- paste(c("BMDM_Bl6_",stim,"_0000___",sex),collapse="")
-  res <- rbind(cbind(zstring,zerotconds),res)
   colnames(res) <- NULL
   rb <- as.character(sapply(res[,2],basename))
-  collect <- cbind(stim,res[,1],rb,res[,2])
+  if ( is.null(label) ) { label <- stim }
+  collect <- cbind(label,res[,1],rb,res[,2])
   colnames(collect) <- NULL
   collect
 }
 
 
 collezion <- character()
+
+##
+## LPS
+##
+zerot <- c(
+           "/net/arrays/Affymetrix/core/probe_data/200406/20040603_03_LPS1-0.CEL",
+           "/net/arrays/Affymetrix/core/probe_data/200406/20040621_01_LPS2-0.CEL",
+           "/net/arrays/Affymetrix/core/probe_data/200406/20040622_01_LPS3-0.CEL"
+           )
+## leave 12hrs out for a bit
+res <- celMat("LPS",c(0,20,40,60,80,120,240,360,480,1080,1440),zerot)
+##/net/arrays/Affymetrix/core/probe_data/200410/20041020_04_LPS_10ng-ul_24h.CEL needs to be removed from output file
+collezion <- rbind(collezion,res)
+
+##
+## R848
+## 
 ##ls /net/arrays/Affymetrix/core/probe_data/200410/*CEL | grep R848 | grep "\-0"
 zerot <-c(
           "/net/arrays/Affymetrix/core/probe_data/200410/20041011_01_R848-A-0.CEL",
@@ -46,6 +65,9 @@ zerot <-c(
 res <- celMat("R848",c(0,20,40,60,80,120),zerot)
 collezion <- rbind(collezion,res)
 
+##
+## PAM2
+## 
 ##ls /net/arrays/Affymetrix/core/probe_data/200407/*CEL | grep PAM2 | grep "\-0"
 zerot <-c(
           "/net/arrays/Affymetrix/core/probe_data/200407/20040706_01_PAM2A-0.CEL",
@@ -55,6 +77,9 @@ zerot <-c(
 res <- celMat("PAM2",c(0,20,40,60,80,120),zerot,sex="Male")
 collezion <- rbind(collezion,res)
 
+##
+## PAM3
+## 
 ##ls /net/arrays/Affymetrix/core/probe_data/200407/*CEL | grep PAM3 | grep "\-0"
 zerot <- c(
            "/net/arrays/Affymetrix/core/probe_data/200407/20040712_01_PAM3A-0.CEL",
@@ -64,6 +89,9 @@ zerot <- c(
 res <- celMat("PAM3",c(0,20,40,60,80,120,240,480,720),zerot,sex="Male")
 collezion <- rbind(collezion,res)
 
+##
+## Poly IC
+##
 ## ls /net/arrays/Affymetrix/core/probe_data/200410/*CEL | grep PIC | grep "\-0"
 zerot <- c(
            "/net/arrays/Affymetrix/core/probe_data/200410/20041004_01_PIC-A-0.CEL",
@@ -73,6 +101,9 @@ zerot <- c(
 res <- celMat("Poly IC",c(0,20,40,60,80,120,240,480,720),zerot)
 collezion <- rbind(collezion,res)
 
+##
+## CpG
+##
 ##ls /net/arrays/Affymetrix/core/probe_data/200503/*CEL | grep CPG | grep "\-0"
 #ls /net/arrays/Affymetrix/core/probe_data/200502/*CEL | grep CPG | grep "\-0"
 zerot <- c(
@@ -82,43 +113,39 @@ zerot <- c(
 res <- celMat("CpG",c(0,20,40,60,80,120),zerot)
 collezion <- rbind(collezion,res)
 
-write.table(collezion,file="/Users/thorsson/allarrays/auxfiles/try.tsv",quote=FALSE,col.name=FALSE,row.name=FALSE,sep="\t")
+#
+# MyD88
+#
+##ls /net/arrays/Affymetrix/core/probe_data/200502/*.CEL | grep MyD88 | grep "\-0"
+zerot <- c(
+           "/net/arrays/Affymetrix/core/probe_data/200502/20050208_01_MyD88_LPS_M2-0.CEL",
+           "/net/arrays/Affymetrix/core/probe_data/200502/20050224_08_MyD88_PIC_C-0.CEL"
+           )
+res <- celMat(stim="LPS",c(0,20,60,120),zerot,strain="Myd88 null",label="MyD88")
+collezion <- rbind(collezion,res)
+res <- celMat(stim="PAM3",c(0,20,60,120),zerotconds=NULL,strain="Myd88 null",label="MyD88")
+collezion <- rbind(collezion,res)
+res <- celMat(stim="Poly IC",c(0,20,60,120),zerotconds=NULL,strain="Myd88 null",label="MyD88")
+collezion <- rbind(collezion,res)
 
-if (FALSE) {
+##
+## TRIF
+##
+res <- celMat(stim="LPS",c(0,20,60,120),zerotconds=NULL,strain="TRIF null (LPS2)",label="TRIF")
+collezion <- rbind(collezion,res)
+## These need weeding by hand
+res <- celMat(stim="PAM2",c(0,20,60,120),zerotconds=NULL,strain="TRIF null (LPS2)",label="TRIF")
+collezion <- rbind(collezion,res)
 
-tc <- list()
-tc[["Cell Type"]] <- "BMDM"
-tc[["Strain"]] <- "Myd88 null"
-tc[["Stimulus 1"]] <- "LPS"
-tc[["Time 1"]] <- c(0,20,60,120)
-res <- celFilesFromCSSTCs(tc,file="/Users/thorsson/allarrays/auxfiles/MyD88LPSthreePrimeCelFiles_unix")
-tc <- list()
-tc[["Cell Type"]] <- "BMDM"
-tc[["Strain"]] <- "Myd88 null"
-tc[["Stimulus 1"]] <- "PAM3"
-tc[["Time 1"]] <- c(0,20,60,120)
-res <- celFilesFromCSSTCs(tc,file="/Users/thorsson/allarrays/auxfiles/MyD88PAM3threePrimeCelFiles_unix")
 
-tc <- list()
-tc[["Cell Type"]] <- "BMDM"
-tc[["Strain"]] <- "Myd88 null"
-tc[["Stimulus 1"]] <- "Poly IC"
-tc[["Time 1"]] <- c(0,20,60,120)
-res <- celFilesFromCSSTCs(tc,file="/Users/thorsson/allarrays/auxfiles/MyD88PolyICthreePrimeCelFiles_unix")
-##ls /net/arrays/Affymetrix/core/probe_data/200502/*CEL | grep MyD88 | grep "\-0"
+##
+## All bad cases covered by looking for stim amount in cel name
+##
+baddies <- grep("ng",collezion[,3])
+collezion <- collezion[-baddies,]
 
-## TRIF KO
-tc <- list()
-tc[["Cell Type"]] <- "BMDM"
-tc[["Strain"]] <- "TRIF null (LPS2)"
-tc[["Stimulus 1"]] <- "LPS"
-tc[["Time 1"]] <- c(0,20,60,120)
-res <- celFilesFromCSSTCs(tc,file="/Users/thorsson/allarrays/auxfiles/TRIFLPSthreePrimeCelFiles_unix")
-tc <- list()
-tc[["Cell Type"]] <- "BMDM"
-tc[["Strain"]] <- "TRIF null (LPS2)"
-tc[["Stimulus 1"]] <- "PAM2"
-tc[["Time 1"]] <- c(0,20,60,120)
-res <- celFilesFromCSSTCs(tc,file="/Users/thorsson/allarrays/auxfiles/TRIFPAM2threePrimeCelFiles_unix")
+#
+# Output
+#
+write.table(collezion,file="/Users/thorsson/allarrays/auxfiles/ThreePrimeMasterFile.tsv",quote=FALSE,col.name=FALSE,row.name=FALSE,sep="\t")
 
-}
