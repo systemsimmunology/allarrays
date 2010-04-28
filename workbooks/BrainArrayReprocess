@@ -1,4 +1,25 @@
 
+
+April 27, 2010
+--------------
+R --no-save < /Users/thorsson/allarrays/arraypipeline/SetUpThreePrime.R
+
+April 27, 2010
+--------------
+
+grep PAM3 celfiles_no_path > $AA/auxfiles/PAM3threePrimeCelFiles-groupings.tsv
+
+These were not in earlier analysis and were left out for now
+20070307_05_WT_PAM3_8hr_2.CEL
+20070307_04_WT_PAM3_8hr_1.CEL
+
+$AA/arraypipeline/VERASAMpipeline.sh $AA/data/20100426.curated.3prime/emat.tsv $AA/auxfiles/PAM3threePrimeCelFiles-groupings.tsv BMDM_Bl6_PAM3_0000
+
+cp expression.mus /Users/thorsson/allarrays/data/20100426.curated.3prime/PAM3.mus
+cp expression.log10_ratios /Users/thorsson/allarrays/data/20100426.curated.3prime/PAM3.log10_ratios
+cp expression.lambdas /Users/thorsson/allarrays/data/20100426.curated.3prime/PAM3.lambdas      
+cp expression.muStandardErrors /Users/thorsson/allarrays/data/20100426.curated.3prime/PAM3.muStandardErrors
+
 April 26, 2010
 --------------
 
@@ -39,7 +60,6 @@ rm -f tempfile
 
 cat TRIFLPSthreePrimeCelFiles_unix TRIFPAM2threePrimeCelFiles_unix > TRIFthreePrimeCelFiles_unix
 
-
 cat LPSthreePrimeCelFiles_unix PAM2threePrimeCelFiles_unix PAM3threePrimeCelFiles_unix PolyICthreePrimeCelFiles_unix R848threePrimeCelFiles_unix CpGthreePrimeCelFiles_unix MyD88threePrimeCelFiles_unix TRIFthreePrimeCelFiles_unix > OriginalThreePrimeCelFiles_unix
 
 Normalize all 
@@ -78,7 +98,7 @@ Exon array Replicate combination.
 cd data/20100407.curated.exon 
  R --vanilla --slave --args emat.tsv $AA/auxfiles/LPSexonCelFiles-groupings.tsv eemat.tsv  < $AA/arraypipeline/median_combine_replicates.R
 
-Sample groups
+Sample groups, RData files
 cd data/20100407.curated.exon 
 R --slave --args ../../auxfiles/LPSexonCelFiles-GroupMetaData.tsv < ../../utils/ReadSampleGroup.R 
 

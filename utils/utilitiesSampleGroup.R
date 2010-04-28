@@ -430,7 +430,7 @@ writeCSSTCs <- function( CSSs.tc, file="CSSTCs.tsv" ){
 ##
 ## Currently geared only to single stim
 
-celFilesFromCSSTCs <- function( tc, file=NULL){
+celFilesFromCSSTCs <- function( tc ){
 
   term.array <- "/sampleData/microarray/chips/Mouse 430 2.0"
   names(term.array) = "chip"
@@ -440,33 +440,37 @@ celFilesFromCSSTCs <- function( tc, file=NULL){
   names(term.str)="Strain"  
   term.stim=tc[["Stimulus 1"]]
   names(term.stim)="Stimulus 1"
-
+  term.sex=tc[["Sex"]]
+  names(term.sex)="Sex"
+  
   termlist <- list()
   termlist[[1]] <- term.array
   termlist[[2]]=term.ct
   termlist[[3]]=term.str
   termlist[[4]]=term.stim
-  
   termlist[[5]]=NULL
-  collect <- character()
+  collect <- c("","")
   for (t in tc[["Time 1"]]) {
     ## t is an integer which we need to convert to term.t="\"0020\""
     pre <- paste(rep("0",4-nchar(as.character(t))),collapse="")
     term.t <- paste(c("\"",pre,as.character(t),"\""),collapse="")
     names(term.t)="Time 1"
     termlist[[5]] <- term.t
+    termlist[[6]] <- term.sex
+    ## create string form of condition
+    css <- tc
+    css[["Time 1"]] <- timeAsPaddedString(t)
+    stringform <- metaToString(css)
+    ## Retrieve matching samples
     objs  <- searchByNameValue(termListHttpForm(termlist))
     objs <- removeStim2SG(objs) ## as these are returned during search
-    
     for (obj in objs){
-      collect <- c(collect,obj[["raw_data_path"]])
+      collect <- rbind(collect,c(stringform,obj[["raw_data_path"]]))
     }
   }
-
-  collect
-
-  if (!is.null(file)){
-    write.table(collect,file=file,quote=FALSE,row.names=FALSE,col.names=FALSE)
-  }
+  collect <- collect[-1,]
+  colnames(collect) <- NULL
+  rownames(collect) <- NULL
+  collect 
     
 }

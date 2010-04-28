@@ -313,6 +313,13 @@ timesAsString <- function ( obj ){
   return(paste(paste(names(tv),"(",as.vector(tv),")",sep=""),collapse=";"))
 }
 
+# integer 20 to string 0020, e.g.
+timeAsPaddedString <- function (t){
+  pre <- paste(rep("0",4-nchar(as.character(t))),collapse="")
+  term.t <- paste(c(pre,as.character(t)),collapse="")
+  term.t
+}
+
 timesAsVector <- function ( obj ){
   tv <- table(unlist(lapply(obj,"[[","Time 1")))
   return(tv)
