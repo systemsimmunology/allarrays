@@ -1,7 +1,7 @@
 #!/bin/bash
 ##Important!! run in a tmp directory
-conds=("LPS" "PAM2" "PAM3" "R848" "Poly-IC" "CpG" "MyD88")
-zeros=("BMDM_Bl6_LPS_0000___Female" "BMDM_Bl6_PAM2_0000___Male" "BMDM_Bl6_PAM3_0000___Male" "BMDM_Bl6_R848_0000___Female" "BMDM_Bl6_Poly-IC_0000___Female" "BMDM_Bl6_CpG_0000___Female" "BMDM_Myd88-null_LPS_0000___Female")
+conds=("LPS" "PAM2" "PAM3" "R848" "Poly-IC" "CpG" "MyD88-LPS" "MyD88-PolyIC")
+zeros=("BMDM_Bl6_LPS_0000___Female" "BMDM_Bl6_PAM2_0000___Male" "BMDM_Bl6_PAM3_0000___Male" "BMDM_Bl6_R848_0000___Female" "BMDM_Bl6_Poly-IC_0000___Female" "BMDM_Bl6_CpG_0000___Female" "BMDM_Myd88-null_LPS_0000___Female" "BMDM_Myd88-null_Poly-IC_0000___Female")
 
 cnt=${#conds[@]}
 for (( i = 0 ; i < cnt ; i++ ))

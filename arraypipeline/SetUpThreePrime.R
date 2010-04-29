@@ -121,20 +121,21 @@ zerot <- c(
            "/net/arrays/Affymetrix/core/probe_data/200502/20050208_01_MyD88_LPS_M2-0.CEL",
            "/net/arrays/Affymetrix/core/probe_data/200502/20050224_08_MyD88_PIC_C-0.CEL"
            )
-res <- celMat(stim="LPS",c(0,20,60,120),zerot,strain="Myd88 null",label="MyD88")
+res <- celMat(stim="LPS",c(0,20,60,120),zerot,strain="Myd88 null",label="MyD88-LPS")
 collezion <- rbind(collezion,res)
-res <- celMat(stim="PAM3",c(0,20,60,120),zerotconds=NULL,strain="Myd88 null",label="MyD88")
+res <- celMat(stim="Poly IC",c(0,20,60,120),zerot,strain="Myd88 null",label="MyD88-PolyIC")
 collezion <- rbind(collezion,res)
-res <- celMat(stim="Poly IC",c(0,20,60,120),zerotconds=NULL,strain="Myd88 null",label="MyD88")
+res <- celMat(stim="PAM3",c(0,20,60,120),zerot[1],strain="Myd88 null",label="MyD88-PAM3")
 collezion <- rbind(collezion,res)
+
 
 ##
 ## TRIF
 ##
-res <- celMat(stim="LPS",c(0,20,60,120),zerotconds=NULL,strain="TRIF null (LPS2)",label="TRIF")
+res <- celMat(stim="LPS",c(0,20,60,120),zerotconds=NULL,strain="TRIF null (LPS2)",label="TRIF-LPS")
 collezion <- rbind(collezion,res)
 ## These need weeding by hand
-res <- celMat(stim="PAM2",c(0,20,60,120),zerotconds=NULL,strain="TRIF null (LPS2)",label="TRIF")
+res <- celMat(stim="PAM2",c(0,20,60,120),zerotconds=NULL,strain="TRIF null (LPS2)",label="TRIF-PAM2")
 collezion <- rbind(collezion,res)
 
 
