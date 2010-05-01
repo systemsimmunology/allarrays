@@ -367,3 +367,87 @@ platformCountAsString <- function ( obj ){
   outString <- gsub(Tstring,"T",outString)
   return(outString)
 }
+
+
+## Get cel files locations (raw data path)
+## according to metadata in a time corse
+
+##Choices for term.array
+##term.array="/sampleData/microarray/chips/Mouse 430 2.0"
+##term.array="/sampleData/microarray/chips/Mouse Exon"
+## Currently geared only to single stim
+
+celFilesFromCSSTCs <- function( tc, term.array="/sampleData/microarray/chips/Mouse 430 2.0" ){
+
+  names(term.array) = "chip"
+  term.ct=tc[["Cell Type"]]
+  names(term.ct)="Cell Type"
+  term.str=tc[["Strain"]]
+  names(term.str)="Strain"  
+  term.stim=tc[["Stimulus 1"]]
+  names(term.stim)="Stimulus 1"
+  term.sex=tc[["Sex"]]
+  names(term.sex)="Sex"
+  
+  termlist <- list()
+  termlist[[1]] <- term.array
+  termlist[[2]]=term.ct
+  termlist[[3]]=term.str
+  termlist[[4]]=term.stim
+  termlist[[5]]=NULL
+  collect <- c("","")
+  for (t in tc[["Time 1"]]) {
+    ## t is an integer which we need to convert to term.t="\"0020\""
+    pre <- paste(rep("0",4-nchar(as.character(t))),collapse="")
+    term.t <- paste(c("\"",pre,as.character(t),"\""),collapse="")
+    names(term.t)="Time 1"
+    termlist[[5]] <- term.t
+    termlist[[6]] <- term.sex
+    ## create string form of condition
+    css <- tc
+    css[["Time 1"]] <- timeAsPaddedString(t)
+    stringform <- metaToString(css)
+    ## Retrieve matching samples
+    objs  <- searchByNameValue(termListHttpForm(termlist))
+    objs <- removeStim2SG(objs) ## as these are returned during search
+    for (obj in objs){
+      collect <- rbind(collect,c(stringform,obj[["raw_data_path"]]))
+    }
+  }
+  collect <- collect[-1,]
+  colnames(collect) <- NULL
+  rownames(collect) <- NULL
+  collect 
+    
+}
+
+
+## utility function for creating cel file matrix from set of times
+## If specific cel files are know for the unstimulated case, place those in zerotconds
+
+##Choices for term.array
+##term.array="/sampleData/microarray/chips/Mouse 430 2.0"
+##term.array="/sampleData/microarray/chips/Mouse Exon"
+
+celMat <- function( stim, times, zerotconds=NULL, sex="Female",strain="Bl6",label=NULL,term.array="/sampleData/microarray/chips/Mouse 430 2.0" ){
+  tc <- list()
+  tc[["Cell Type"]] <- "BMDM"
+  tc[["Strain"]] <- strain
+  tc[["Stimulus 1"]] <- stim
+  tc[["Sex"]] <- sex
+  tc[["Time 1"]] <- times
+  res <- celFilesFromCSSTCs(tc,term.array=term.array) # the actual query
+  stim <- dashify(stim)
+  strain <- dashify(strain)
+  if ( !is.null(zerotconds) ){
+    zstring <- paste(c("BMDM_",strain,"_",stim,"_0000___",sex),collapse="")
+    res <- rbind(cbind(zstring,zerotconds),res)
+  }
+  colnames(res) <- NULL
+  rb <- as.character(sapply(res[,2],basename))
+  if ( is.null(label) ) { label <- stim }
+  collect <- cbind(label,res[,1],rb,res[,2])
+  colnames(collect) <- NULL
+  collect
+}
+

@@ -12,10 +12,10 @@ do
 
     grep ^$cond $AA/auxfiles/ThreePrimeMasterFile.tsv  | awk '{OFS="\t"; print $3,$2}' > groupings.tsv
     $AA/arraypipeline/VERASAMpipeline.sh $AA/data/20100426.curated.3prime/emat.tsv groupings.tsv $zero
-    cp expression.mus /Users/thorsson/allarrays/data/20100426.curated.3prime/$cond.mus
-    cp expression.log10_ratios /Users/thorsson/allarrays/data/20100426.curated.3prime/$cond.log10_ratios
-    cp expression.lambdas /Users/thorsson/allarrays/data/20100426.curated.3prime/$cond.lambdas      
-    cp expression.muStandardErrors /Users/thorsson/allarrays/data/20100426.curated.3prime/$cond.muStandardErrors
+    cp expression.mus $AA/data/20100426.curated.3prime/$cond.mus
+    cp expression.log10_ratios $AA/data/20100426.curated.3prime/$cond.log10_ratios
+    cp expression.lambdas $AA/data/20100426.curated.3prime/$cond.lambdas      
+    cp expression.muStandardErrors $AA/data/20100426.curated.3prime/$cond.muStandardErrors
     rm -f *
 
 done

@@ -12,8 +12,6 @@ if (len (sys.argv) != 2):
     sys.exit ()
 groupfile = sys.argv[1]
 
-##groupfile = "/Users/thorsson/allarrays/auxfiles/LPSthreePrimeCelFiles-groupings.tsv" 
-
 ## Read in group file
 lines = open(groupfile).read().split('\n')
 lines = lines[0:-1]

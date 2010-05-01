@@ -5,42 +5,16 @@
 
 library(rjson)
 library(httpRequest)
-source("/Users/thorsson/allarrays/utils/utilitiesSampleGroup.R")
-source("/Users/thorsson/allarrays/utils/utilitiesMetaData.R")
-source("/Users/thorsson/allarrays/utils/httpget.R")
 
-basename <- function(path){
-  toks <- split1(path,splitchar="/")
-  basename <- toks[length(toks)]
-  basename
-}
+util.dir <- file.path(Sys.getenv("AA"),"utils")
+aux.dir <- file.path(Sys.getenv("AA"),"utils")
 
-## utility function for creating cel file matrix )
-celMat <- function( stim, times, zerotconds=NULL, sex="Female",strain="Bl6",label=NULL ){
-  tc <- list()
-  tc[["Cell Type"]] <- "BMDM"
-  tc[["Strain"]] <- strain
-  tc[["Stimulus 1"]] <- stim
-  tc[["Sex"]] <- sex
-  tc[["Time 1"]] <- times
-  res <- celFilesFromCSSTCs(tc)
-  stim <- dashify(stim)
-  strain <- dashify(strain)
-  if ( !is.null(zerotconds) ){
-    zstring <- paste(c("BMDM_",strain,"_",stim,"_0000___",sex),collapse="")
-    res <- rbind(cbind(zstring,zerotconds),res)
-  }
-  colnames(res) <- NULL
-  rb <- as.character(sapply(res[,2],basename))
-  if ( is.null(label) ) { label <- stim }
-  collect <- cbind(label,res[,1],rb,res[,2])
-  colnames(collect) <- NULL
-  collect
-}
+source(paste(util.dir,"httpget.R",sep="/"))
+source(paste(util.dir,"utilitiesSampleGroup.R",sep="/"))
+source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
 
-
+## This is the table we will build up
 collezion <- character()
-
 ##
 ## LPS
 ##
@@ -148,5 +122,7 @@ collezion <- collezion[-baddies,]
 #
 # Output
 #
-write.table(collezion,file="/Users/thorsson/allarrays/auxfiles/ThreePrimeMasterFile.tsv",quote=FALSE,col.name=FALSE,row.name=FALSE,sep="\t")
+aux.dir <- file.path(Sys.getenv("AA"),"utils")
+ofile <- paste(aux.dir,"ThreePrimeMasterFile.tsv",sep="/"))
+write.table(collezion,file=ofile,quote=FALSE,col.name=FALSE,row.name=FALSE,sep="\t")
 
