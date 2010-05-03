@@ -1,8 +1,23 @@
 
+May 1, 2010
+-----------
+run in a tmp folder
+../NonRepPipeline.sh /Users/thorsson/allarrays/data/20100426.curated.3prime/emat.tsv
+mv -f *.mus $AA/data/20100426.curated.3prime
+
+cd $AA/annotations
+awk '{print $1}' $AA/data/20100426.curated.3prime/emat.tsv | tail +2 > MoGene4302_Mm_ENTREZG_psid
+sed 's/\_at//g' MoGene4302_Mm_ENTREZG_psid > MoGene4302_Mm_ENTREZG_eid
+~/bin/reMap.py MoGene4302_Mm_ENTREZG_eid 1 ~/data/ncbi/gene_info_simplified_mouse 1 2 > MoGene4302_Mm_ENTREZG_symbol
+paste MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_eid MoGene4302_Mm_ENTREZG_symbol > MoGene4302_Mm_ENTREZG_mapfile 
+echo -e 'ProbesetID\tEntrezID\tGeneSymbol' | cat - MoGene4302_Mm_ENTREZG_mapfile  > tempfile
+mv -f tempfile MoGene4302_Mm_ENTREZG_mapfile
+rm -f MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_eid MoGene4302_Mm_ENTREZG_symbol
 
 April 27, 2010
 --------------
 R --no-save < /Users/thorsson/allarrays/arraypipeline/SetUpThreePrime.R
+
 
 April 27, 2010
 --------------
