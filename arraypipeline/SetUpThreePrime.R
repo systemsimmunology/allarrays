@@ -1,13 +1,12 @@
-
 #
 # Identify files and parameters for curated 3 prime
 #
-
+ 
 library(rjson)
 library(httpRequest)
 
 util.dir <- file.path(Sys.getenv("AA"),"utils")
-aux.dir <- file.path(Sys.getenv("AA"),"utils")
+aux.dir <- file.path(Sys.getenv("AA"),"auxfiles")
 
 source(paste(util.dir,"httpget.R",sep="/"))
 source(paste(util.dir,"utilitiesSampleGroup.R",sep="/"))
@@ -122,7 +121,7 @@ collezion <- collezion[-baddies,]
 #
 # Output
 #
-aux.dir <- file.path(Sys.getenv("AA"),"utils")
-ofile <- paste(aux.dir,"ThreePrimeMasterFile.tsv",sep="/"))
+aux.dir <- file.path(Sys.getenv("AA"),"auxfiles")
+ofile <- paste(aux.dir,"ThreePrimeMasterFile.tsv",sep="/")
 write.table(collezion,file=ofile,quote=FALSE,col.name=FALSE,row.name=FALSE,sep="\t")
 
