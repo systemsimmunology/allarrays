@@ -102,4 +102,19 @@ gridPlotCSS <- function ( eid, css.tcs, data.matrix=dm, nx=NULL, ny=NULL , ymax=
   mtext(main, adj=0.5, side=3, cex=1.5, outer=TRUE)
 }
 
-              
+
+## colorPlot of metadata
+metaColorMat <- function ( inMat, colormap ){
+  par(mar=c(0,0,0,0), cex.lab=1.4, cex.axis=1.4, cex.main=1.4, cex.sub=1.4)
+  plot.new()
+  nr <- nrow(inMat)
+  nc <- ncol(inMat)
+  for (j in 1:nr ) {
+    for (i in 1:nc ) {
+      label = inMat[j,i]
+      kolor = colormap[[label]]
+      rect(i/nc,j/nr,(i-1)/nc,(j-1)/nr,col=kolor)
+      text((i-0.5)/nc,(j-0.5)/nr,label,col=ifelse(mean(col2rgb(kolor))<120,"white","black"))
+    }
+  }
+}

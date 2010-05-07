@@ -35,7 +35,7 @@ zerot <-c(
           "/net/arrays/Affymetrix/core/probe_data/200410/20041011_01_R848-A-0.CEL",
           "/net/arrays/Affymetrix/core/probe_data/200410/20041012_01_R848-B-0.CEL"
           )
-res <- celMat("R848",c(0,20,40,60,80,120),zerot)
+res <- celMat("R848",c(0,20,40,60,80,120,240,480,720),zerot)
 collezion <- rbind(collezion,res)
 
 ##
@@ -59,7 +59,9 @@ zerot <- c(
            "/net/arrays/Affymetrix/core/probe_data/200407/20040713_01_PAM3B-0.CEL",
            "/net/arrays/Affymetrix/core/probe_data/200407/20040715_01_PAM3C-0.CEL"
            )
-res <- celMat("PAM3",c(0,20,40,60,80,120,240,480,720),zerot,sex="Male")
+res <- celMat("PAM3",c(0,20,40,60,80,120),zerot,sex="Male")
+collezion <- rbind(collezion,res)
+res <- celMat("PAM3",c(240,360,480,720),zerotconds=NULL,sex="Female")
 collezion <- rbind(collezion,res)
 
 ##
@@ -117,6 +119,10 @@ collezion <- rbind(collezion,res)
 ##
 baddies <- grep("ng",collezion[,3])
 collezion <- collezion[-baddies,]
+
+baddies <- grep("WT_PAM3",collezion[,3]) ## spurious (?) 6hr, 8hr
+collezion <- collezion[-baddies,]
+
 
 #
 # Output

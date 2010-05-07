@@ -16,6 +16,6 @@ do
     cp expression.log10_ratios $AA/data/20100426.curated.3prime/$cond.log10_ratios
     cp expression.lambdas $AA/data/20100426.curated.3prime/$cond.lambdas      
     cp expression.muStandardErrors $AA/data/20100426.curated.3prime/$cond.muStandardErrors
-    rm -f *
+    ##rm -f *
 
 done

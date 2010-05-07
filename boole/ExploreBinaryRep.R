@@ -28,7 +28,7 @@ blank.conds <- names(which(apply(mm[eids,],2,sum)==0))
 var.conds <- names(which(apply(mm[eids,],2,sum)!=0))
 
 #
-# Have not revisted code below
+# 
 #
 
 genes.for.plot <- eids
@@ -59,9 +59,8 @@ heatmap(t(log(maxes[genes.for.plot,])),scale="none",margins=c(15,15),cexCol=0.9,
 ## Explore classes
 table(unlist(lapply(CSSs.tc,"[[","Strain")))
 
-
 ##
-## Explore results of influence graph
+## Explore results of influence graph (with Timo, Ilya)
 ## 
 
 minf <- as.matrix(read.table("/Volumes/ILYA LAB/Cytokine\ network/Matlab/G.tsv",sep="\t",as.is=TRUE))      

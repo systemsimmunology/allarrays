@@ -119,7 +119,7 @@ for gr in $sgroups; do
 done
 
 ## Clean up
-rm -f *.headers *.dataColumnHeaders *.XtoYheaders *.Y
-rm -f *.m1 *.m2 *.m3
-rm -f ps t1 t2 
+## rm -f *.headers *.dataColumnHeaders *.XtoYheaders *.Y
+## rm -f *.m1 *.m2 *.m3
+## rm -f ps t1 t2 
 

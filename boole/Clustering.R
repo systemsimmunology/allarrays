@@ -48,7 +48,6 @@ x11()
 hp <- plot(hc.genes, main="complete")
 
 ## Horizontal plot
-
 plot(as.dendrogram(hc.genes),horiz=T)
 
 ## Clustering 
@@ -144,6 +143,7 @@ image(mm[dendrorder.genes,c6],col=collars,main="Cluster 6")
 c8 <- names(which(cmoc==8))
 image(mm[dendrorder.genes,c8],col=collars,main="Cluster 8")
 
+library(MASS)
 
 fit <- isoMDS(dist.conds, k=2) # k is the number of dim
 

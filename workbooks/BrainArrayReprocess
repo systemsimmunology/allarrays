@@ -1,4 +1,18 @@
 
+May 4, 2010
+------------
+Need to re-assess lambda cutoff
+
+go to tmp directory. Turn off rm -f * in scripts.
+
+grep 0000 $AA/auxfiles/ThreePrimeMasterFile.tsv | awk '{OFS="\t"; print $3,$2}' > tempfile
+Edit to yield only triplicated 
+mv tempfile unstim-groupings.tsv
+
+../VERASAMpipeline.sh $AA/data/20100426.curated.3prime/emat.tsv unstim-groupings.tsv BMDM_Bl6_LPS_0000___Female
+
+
+
 May 1, 2010
 -----------
 run in a tmp folder
@@ -17,7 +31,7 @@ rm -f MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_eid MoGene4302_Mm_ENTREZG
 April 27, 2010
 --------------
 R --no-save < /Users/thorsson/allarrays/arraypipeline/SetUpThreePrime.R
-
+../VERASAMpipelineWrapperThreePrime.sh
 
 April 27, 2010
 --------------
