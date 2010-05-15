@@ -29,6 +29,11 @@ zerotconds <- c(
 res <- celMat("PAM3",c(0,60,240,360,720),zerotconds=zerotconds,term.array="/sampleData/microarray/chips/Mouse Exon")
 collezion <- rbind(collezion,res)
 
+### res <- celMat("PAM3",c(0,60,240,360,720),zerotconds=NULL,sex="Male",term.array="/sampleData/microarray/chips/Mouse Exon")
+
+collezion <- rbind(collezion,res)
+
+
 ##
 ## PolyIC 
 ##
@@ -39,7 +44,8 @@ zerotconds <- c(
                 )
 res <- celMat("Poly IC",c(0,240,720,1440),zerotconds=zerotconds,term.array="/sampleData/microarray/chips/Mouse Exon")
 collezion <- rbind(collezion,res)
-
+##res <- celMat("Poly IC",c(0,240,720,1440),zerotconds=NULL,sex="Male",term.array="/sampleData/microarray/chips/Mouse Exon")
+##collezion <- rbind(collezion,res)
 
 ##
 ## PolyIC  MyD88-TRIF 
