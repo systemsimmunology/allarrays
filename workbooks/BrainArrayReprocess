@@ -1,5 +1,5 @@
 
-June 3, 2010
+June 3-7, 2010
 ------------
 
 Reprocess exon arrays with new 2hr triplicate
@@ -7,7 +7,7 @@ Reprocess exon arrays with new 2hr triplicate
 On romulus:
 arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix "MoEx10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
 
-Not yet done:
+Copy files in processed_data to data/20100407.curated.exon
 
 cd data/20100407.curated.exon 
  R --vanilla --slave --args emat.tsv $AA/auxfiles/LPSexonCelFiles-groupings.tsv eemat.tsv  < $AA/arraypipeline/median_combine_replicates.R
