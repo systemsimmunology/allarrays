@@ -1,4 +1,21 @@
 
+June 3, 2010
+------------
+
+Reprocess exon arrays with new 2hr triplicate
+
+On romulus:
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix "MoEx10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
+
+Not yet done:
+
+cd data/20100407.curated.exon 
+ R --vanilla --slave --args emat.tsv $AA/auxfiles/LPSexonCelFiles-groupings.tsv eemat.tsv  < $AA/arraypipeline/median_combine_replicates.R
+
+Sample groups, RData files
+cd data/20100407.curated.exon 
+R --slave --args ../../auxfiles/LPSexonCelFiles-GroupMetaData.tsv < ../../utils/ReadSampleGroup.R 
+
 May 4, 2010
 ------------
 Need to re-assess lambda cutoff
@@ -10,8 +27,6 @@ Edit to yield only triplicated
 mv tempfile unstim-groupings.tsv
 
 ../VERASAMpipeline.sh $AA/data/20100426.curated.3prime/emat.tsv unstim-groupings.tsv BMDM_Bl6_LPS_0000___Female
-
-
 
 May 1, 2010
 -----------
