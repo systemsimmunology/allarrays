@@ -1,5 +1,5 @@
 
-June 3-7, 2010
+June 3-8, 2010
 ------------
 
 Reprocess exon arrays with new 2hr triplicate
@@ -9,12 +9,17 @@ arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCe
 
 Copy files in processed_data to data/20100407.curated.exon
 
+We're missing the Probeset column header (again?) so insert by hand
+
 cd data/20100407.curated.exon 
  R --vanilla --slave --args emat.tsv $AA/auxfiles/LPSexonCelFiles-groupings.tsv eemat.tsv  < $AA/arraypipeline/median_combine_replicates.R
 
 Sample groups, RData files
 cd data/20100407.curated.exon 
 R --slave --args ../../auxfiles/LPSexonCelFiles-GroupMetaData.tsv < ../../utils/ReadSampleGroup.R 
+
+~/bin/reMap.py eemat.tsv 1 MoEx10stv1_Mm_ENTREZG_mapfile 1 2 > expmat.tsv
+R --vanilla --slave < $AA/utils/ExpmatToDM.R 
 
 May 4, 2010
 ------------
