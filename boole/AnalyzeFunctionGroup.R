@@ -1,7 +1,7 @@
 
 ##Set mmg to be the binary matrix for group of interest
 mmg <- mm.ca
-eids <- rownames(mm.ca)
+eids <- rownames(mm)
 
 dist.genes <- dist(mmg,method='manhattan')
 hc.genes <- hclust( dist.genes, "complete" )
@@ -17,7 +17,6 @@ plot(as.dendrogram(hc.genes),horiz=T)
 ## Multidimensional scaling
 ## http://www.statmethods.net/advstats/mds.html
 fit <- cmdscale(dist.genes,eig=TRUE,k=2)
-
 
 # plot solution
 x <- fit$points[,1]
@@ -50,5 +49,5 @@ text(x, y, labels=gene.symbol[eids],cex=0.9)
 ## Heatmap
 ##
 genes.for.plot <- eids
-heatmap(t(mmg[genes.for.plot,]),scale="none",margins=c(15,15),cexCol=0.9,cexRow=1.2,labCol=gsym[genes.for.plot])
+heatmap(t(mmg[genes.for.plot,]),scale="none",margins=c(15,15),cexCol=0.9,cexRow=1.2,labCol=gene.symbol[genes.for.plot])
 

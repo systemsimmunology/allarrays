@@ -421,3 +421,18 @@ writeCSSTCs <- function( CSSs.tc, file="CSSTCs.tsv" ){
   }
   close(zz)
 }
+
+## Simplified matrix summary form of CCSTs
+CSSTsSummaryMat <- function ( CSSs.tc ){
+  outmat <- character()
+  cols <- c("Cell Type","Strain","Stimulus 1")
+  for ( CSS.tc in CSSs.tc ){
+    vals <- unlist(CSS.tc[cols])
+    outmat <- rbind(outmat,vals)
+  }
+  colnames(outmat) <- cols
+  rownames(outmat) <- names(CSSs.tc)
+  outmat
+}
+  
+                
