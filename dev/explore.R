@@ -1,4 +1,9 @@
 
+dev.set(2)  
+gridPlotCSS(gene.eid["Il17rb"],CSSs.tc.3prime,data.matrix=dm.3prime,nx=7,ny=7)
+##x11()
+dev.set(3)
+gridPlotCSS(gene.eid["Il23r"],CSSs.tc.exon,data.matrix=dm.exon,nx=10,ny=10)
 
 ###########
 ########## Test plots for the above

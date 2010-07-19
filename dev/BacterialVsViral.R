@@ -4,6 +4,7 @@ pdata.dir <- file.path(Sys.getenv("AA"),"processed_data/20091015")
 util.dir <- file.path(Sys.getenv("AA"),"utils")
 
 load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.symbol.RData",sep="/"))
+load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.eid.RData",sep="/"))
 
 source(paste(util.dir,"utilitiesPlot.R",sep="/"))
 source(paste(util.dir,"utilitiesMetaData.R",sep="/"))
