@@ -13,8 +13,8 @@ debug <- FALSE
 
 if ( timefilter ){
   ## format m/d/y
-  startDate <- "8/29/09"
-  endDate <- "2/28/10"
+  startDate <- "3/1/10"
+  endDate <- "8/23/10"
   ##startDate <- "1/1/01"
   ##endDate <- "1/1/15"
 }
@@ -59,7 +59,7 @@ obj.1 <- searchByNameValue(termListHttpForm(termlist))
 ##length(obj.1) is 648 on 8-30-09 for exon arrays
 ##length(obj.1) is 672 on 9-30-09 for exon arrays
 ##length(obj.1) is 752 on 2-09-10 for exon arrays
-
+##length(obj.1) is 897 on 8-23-10 for exon arrays
 
 if ( timefilter ){
   ## Filter by time if desired
@@ -233,6 +233,5 @@ cat("Have Cell Type,Strain, Stimulus 1 (no Stimulus 2):",sum(timetallyMat),"\n")
 outMat <- rbind(c("Cell Type","Strain","Stimulus 1","Time 1","Stimulus 2","Time 2"),doobles)
 write.table(outMat,file="Doubles.tsv",sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
 
-##write.table(outMat,file="AllThreePrimeMetaData.tsv",sep="\t",quote=FALSE)
 
 

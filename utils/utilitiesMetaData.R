@@ -304,8 +304,12 @@ inListSoft <- function(query,targetList){
    
 ## Retain only single stim
 removeStim2 <- function( inObj ){
-  keep.these <- which(unlist(lapply(lapply(inObj,"[[","Stimulus 2"),is.null)))
-  return( inObj[keep.these] )
+  if ( length(inObj) > 0 ){
+    keep.these <- which(unlist(lapply(lapply(inObj,"[[","Stimulus 2"),is.null)))
+    return( inObj[keep.these] )
+  } else {
+    return( inObj )
+  }
 }
 
 timesAsString <- function ( obj ){

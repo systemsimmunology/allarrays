@@ -32,7 +32,7 @@ endDate <- "2/28/10"
 ## All arrays
 ## format m/d/y
 startDate <- "1/1/01"
-endDate <- "1/1/15"
+endDate <- "12/31/10"
 
 chips <- c("Mouse Exon","Mouse 430 2.0","Mouse Promoter 1.0R","Isbimm","Human U133 Plus 2.0","Human U133A","Human Exon","Rhesus Macaque")
 
@@ -50,7 +50,9 @@ glueprojects <- c(
 "Leishmania Infected Cells",
 "Viral Infections",
 "Glue Genomics",
-"GLUE grant"  )
+"GLUE grant"  ,
+"R37-LPS regulation of macrophage function"
+)
 
 collect <- numeric()
 keepers <- character()
@@ -94,7 +96,7 @@ for ( proj in glueprojects ){
 
 rownames(collect) <- keepers
 
-write.table(matrixPrintFormat(collect),file="1MarchTo26Aug2009.tsv",sep='\t',quote=FALSE,row.names=FALSE,col.names=FALSE)
+write.table(matrixPrintFormat(collect),file="StartTo23Aug2010.tsv",sep='\t',quote=FALSE,row.names=FALSE,col.names=FALSE)
 
 
 
