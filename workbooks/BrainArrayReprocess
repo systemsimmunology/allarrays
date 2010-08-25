@@ -1,4 +1,18 @@
 
+August 24 2010
+--------------
+
+Need mapfiles for MoEx and BrainArray Version 13
+
+awk '{print $1}' emat.tsv | tail +2 > MoEx10stv1_Mm_ENTREZG_psid
+sed 's/\_at//g' MoEx10stv1_Mm_ENTREZG_psid > MoEx10stv1_Mm_ENTREZG_eid
+~/bin/reMap.py MoEx10stv1_Mm_ENTREZG_eid 1 ~/data/ncbi/gene_info_simplified_mouse 1 2 > MoEx10stv1_Mm_ENTREZG_symbol
+paste MoEx10stv1_Mm_ENTREZG_psid MoEx10stv1_Mm_ENTREZG_eid MoEx10stv1_Mm_ENTREZG_symbol > MoEx10stv1_Mm_ENTREZG_mapfile 
+echo -e 'ProbesetID\tEntrezID\tGeneSymbol' | cat - MoEx10stv1_Mm_ENTREZG_mapfile  > tempfile
+mv -f tempfile MoEx10stv1_Mm_ENTREZG_mapfile
+rm -f MoEx10stv1_Mm_ENTREZG_psid MoEx10stv1_Mm_ENTREZG_eid MoEx10stv1_Mm_ENTREZG_symbol
+
+
 June 3-8, 2010
 ------------
 
