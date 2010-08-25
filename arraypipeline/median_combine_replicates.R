@@ -12,13 +12,9 @@ v <- rt$V2
 names(v) <- rt$V1
 uvs <- unique(v)
 
-emat <- as.matrix(read.table(expfile,as.is=TRUE))
-## More faithful version of columns headers takes care of
-## R incorrectly inserts X before colheaders that begin with a number
-## and converting "-" to "."
-colnames(emat) <- strsplit(readLines(expfile,n=1),'\t')[[1]][-1]
 
-## 
+emat <- read.matrix(expfile)
+
 h <- numeric()
 for ( uv in uvs ){
   cols <- names(which(v==uv))
@@ -27,17 +23,7 @@ for ( uv in uvs ){
 }
 colnames(h) <- uvs
 
-matrixPrintFormat <- 
-function( matrix,topLeftString="" ){
-  rownames <- rownames(matrix)
-  colnames <- colnames(matrix)
-  outMat <- cbind(rownames,matrix)
-  outMat <- rbind(c(topLeftString,colnames),outMat)
-  rownames(outMat) <- NULL
-  colnames(outMat) <- NULL
-  return(outMat)
-}
-
 write.table(matrixPrintFormat(h),file=outfile,sep="\t",quote=FALSE,row.names = FALSE, col.names = FALSE)
-##save(eemat,file="eemat.RData")
+eemat <- h
+save(eemat,file="eemat.RData")
 

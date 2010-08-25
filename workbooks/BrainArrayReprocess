@@ -4,6 +4,26 @@ August 25, 2010
 
 Reprocess exon arrays with new 6hr triplicate
 
+Run on fjord
+
+arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_OS_X "MoEx10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
+
+Copy files in processed_data to data/20100407.curated.exon
+
+We're missing the ProbesetID column header so insert by hand.
+Update $AA/auxfiles/LPSexonCelFiles-groupings.tsv
+
+cd data/20100407.curated.exon 
+R --no-restore --slave --args emat.tsv $AA/auxfiles/LPSexonCelFiles-groupings.tsv eemat.tsv  < $AA/arraypipeline/median_combine_replicates.R
+
+Sample groups, RData files
+cd data/20100407.curated.exon 
+R --slave --args ../../auxfiles/LPSexonCelFiles-GroupMetaData.tsv < ../../utils/ReadSampleGroup.R 
+
+We're missing the ProbesetID column header so insert by hand.
+~/bin/reMap.py eemat.tsv 1 $AA/annotation/MoEx10stv1_Mm_ENTREZG_mapfile 1 2 > expmat.tsv
+R --no-restore --slave < $AA/utils/ExpmatToDM.R 
+
 August 24 2010
 --------------
 
