@@ -4,8 +4,11 @@ WRONGARGS=1
 if [ $# != 4 ]
 then
   echo "Usage: `basename $0` <CEL File list with full paths> <cdfName> <Destination directory> <Temporary Working directory (Created and Deleted)>" >&2
+  echo "cdfName e.g. Mouse4302_Mm_ENTREZG, MoEx10stv1_Mm_ENTREZG" >&2
+
   exit $WRONGARGS
 fi
+
 
 cellist=$1
 cdfName=$2

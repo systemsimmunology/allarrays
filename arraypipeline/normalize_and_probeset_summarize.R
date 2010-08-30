@@ -1,11 +1,11 @@
 ## Invoke using
 ## R --vanilla --slave --args " "CEL list, no path""CEL file folder" "cdfName" < normalize_and_probeset_summarize.R
-## cdfName e.g. "Mouse4302_Mm_ENTREZG", "MoGene10stv1_Mm_ENTREZG"
+## cdfName e.g. "Mouse4302_Mm_ENTREZG", "MoEx10stv1_Mm_ENTREZG"
 
 library(affy)
 
 ##library(mouse4302mmentrezgcdf) ## R CMD INSTALL mouse4302mmentrezgcdf_12.1.0.tar.gz
-##library(mogene10stv1mmentrezgcdf)
+##library(moex10stv1mmentrezgcdf)
 
 ca <- commandArgs()
 filelist <- ca[5]
@@ -25,7 +25,7 @@ rawdata<-ReadAffy(filenames=filenames,celfile.path=celfile.path, cdfname=cdfName
 
 ## Change to custom CDF (hopefully obsolete by using this in ReadAffy 
 ## rawdata@cdfName <- "Mouse4302_Mm_ENTREZG"
-## rawdata@cdfName <- "MoGene10stv1_Mm_ENTREZG"
+## rawdata@cdfName <- "MoEx10stv1_Mm_ENTREZG"
 
 ## Background correct, Normalize, Probeset Summarize
 eset <- rma(rawdata) ## rma or gcrma
