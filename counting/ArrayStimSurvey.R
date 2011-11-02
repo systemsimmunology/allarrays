@@ -14,7 +14,7 @@ debug <- FALSE
 if ( timefilter ){
   ## format m/d/y
   startDate <- "3/1/10"
-  endDate <- "8/23/10"
+  endDate <- "8/29/10"
   ##startDate <- "1/1/01"
   ##endDate <- "1/1/15"
 }
