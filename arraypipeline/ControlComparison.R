@@ -12,5 +12,5 @@ for ( n in 1:ncol(ls)) {
   collect <- c(collect, quantile(ls[,n],0.95))
 }
 
-mean(collect) ## 26.61275
+mean(collect) ## 26.61275 for 0.95;  66.31579 for 0.99
 
