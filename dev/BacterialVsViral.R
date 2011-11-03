@@ -2,6 +2,7 @@
 
 pdata.dir <- file.path(Sys.getenv("AA"),"processed_data/20091015")
 util.dir <- file.path(Sys.getenv("AA"),"utils")
+annot.dir <- file.path(Sys.getenv("AA"),"annotation")
 
 load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.symbol.RData",sep="/"))
 load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.eid.RData",sep="/"))
@@ -14,11 +15,11 @@ load(paste(pdata.dir,"dm.exon.RData",sep="/"))
 load(paste(pdata.dir,"CSSs.tc.RData",sep="/"))
 load(paste(pdata.dir,"CSSs.tc.exon.RData",sep="/"))
 load(paste(pdata.dir,"CSSs.tc.3prime.RData",sep="/"))
-load(paste(pdata.dir,"mm.RData",sep="/"))
+load(paste(pdata.dir,"mm.RData",sep="/")) ## Matrix of discretized timecourses
 
 all.conds <- colnames(mm)
 
-rt <- read.table("/Users/thorsson/allarrays/dev/StimulusClasses.tsv",as.is=TRUE,sep='\t',header=TRUE)
+rt <- read.table(paste(annot.dir,"StimulusClasses.tsv",sep="/"),as.is=TRUE,sep='\t',header=TRUE)
 gclass <- rt[["General.Class"]]
 names(gclass) <- rt[["Stimulus"]]
 
@@ -76,11 +77,7 @@ bbw <- apply(mmw[,b.conds],1,sum)/nb
 plot(bbw,vvw,xlab="Weighted Bacterial frequency",ylab="Weighted Viral frequency")
 text(bbw,vvw,labels=gene.symbol[rownames(mm)],pos=3)
 
-
 we <- names(sort(w,decreasing=TRUE)[1:25])
-
-
-we <- names(sort(w,increasing=TRUE)[1:25])
 
 
 eid <- we[2]

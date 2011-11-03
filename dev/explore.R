@@ -42,10 +42,6 @@ gridPlotCSS(eid,CSSs.tc.3prime[both],data.matrix=dm.3prime,nx=3,ny=2)
 
 
 
-
-
-
-
 ### Make choices for which arrays to get repsentative values
 CSSs.tc["BMDM_Bl6_AC-LDL__Female"] <- CSSs.tc.3prime["BMDM_Bl6_AC-LDL__Female"] ## Both at 24 hrs, but most LDLs were done for 3' (?)
 CSSs.tc["BMDM_Bl6_Ifn beta__Female"] <- CSSs.tc.3prime["BMDM_Bl6_Ifn beta__Female"] ## more time points. Tmax is 24hrs for exon, though.

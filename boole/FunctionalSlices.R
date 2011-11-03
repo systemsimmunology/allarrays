@@ -29,8 +29,6 @@ aacid <- kp[["mmu00590"]]
 ## Ubiquitin Mediated Protelysis
 ump <- kp[["mmu04120"]]
 
-source("~/bin/R/functions/matrixUtils.R")
-
 cat("\nCytokine Activity\n")
 mm.ca <- sliceByAvailableRows(ca,mm)
 mm.ca <- diversify(mm.ca,col.on.min=0.05, col.on.max=0.95,row.on.min=0.05,row.on.max=0.95)

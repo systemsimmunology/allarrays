@@ -22,6 +22,8 @@ blank.conditions <- names(which(n.expressed.genes==0))
 ##
 ## Genes in Subset of interest
 ##
+go.dir <- file.path(Sys.getenv("DATA_DIR"),"GeneOntology")
+ca <- as.character(read.table(paste(go.dir,"CytokineActivity.tsv",sep="/"),as.is=TRUE)$V1)
 
 eids <- intersect(ca,variable.genes)
 blank.conds <- names(which(apply(mm[eids,],2,sum)==0))

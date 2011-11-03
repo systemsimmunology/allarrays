@@ -66,13 +66,13 @@ collars <- c("white","black")
 x11()
 par(mfrow=c(2,2))
 
-c1 <- gene.eids[names(which(cmoc==1))]
+c1 <- gene.eid[names(which(cmoc==1))]
 image(t(mm[c1,dendrorder.conds]),col=collars,main="Cluster 1")
 
-c2 <- gene.eids[names(which(cmoc==2))]
+c2 <- gene.eid[names(which(cmoc==2))]
 image(t(mm[c2,dendrorder.conds]),col=collars,main="Cluster 2")
 
-c3 <- gene.eids[names(which(cmoc==3))]
+c3 <- gene.eid[names(which(cmoc==3))]
 image(t(mm[c3,dendrorder.conds]),col=collars,main="Cluster 3")
 
 ##
@@ -160,6 +160,7 @@ text(x, y, labels=var.conds,cex=0.9)
 
 
 ## Careful, this can be  too big for X11
+## (later comment: hc.mm has not been defined)
 Rowv  <- as.dendrogram(hc.mm)
 hv <- heatmap(t(mm[eids,]),Rowv=Rowv, scale="none",margins=c(15,15),cexCol=0.9,cexRow=1.2,labCol=gsym[eids])
 so <- colnames(mm)[hv$rowInd][129:1]
