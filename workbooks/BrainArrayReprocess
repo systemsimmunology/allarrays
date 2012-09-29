@@ -1,7 +1,111 @@
 
+September 28, 2012
+----------------- 
+
+Looking into renormalizing all arrays with brainaryy
+
+
+(Note done yet: realizing that this is for a smaller set of "curated" LPS-only samples, used currently for ChIP seq analysis
+To do properly for "allarrays" we probably need to redo expression_set.tsv and Data_Matrix_tsv in folders in 
+~/data/ImmunoRepository/sampleData/microarray/runs/
+Might be doable given scripts below, including median_combine_replicates.R
+
+mkdir $AA/data/20120928.exon
+cd $AA/data/20120928.exon
+
+AllExonArrayPaths.txt:
+cel file list, contains all files in sglist, additional unique step was needed
+
+$AA/arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/data/20120928.exon/AllExonArrayPaths.txt "MoEx10stv1_Mm_ENTREZG" ~/allarrays/data/20120928.exon ~/allarrays/data/20120928.exon/tmp
+
+
+September 27-28, 2012
+------------------
+
+** Update Exon annotations with latest BrainArray for LPS timecourse**
+
+*Create Exon expression matrix, "curated" set of samples
+mkdir $AA/data/20120927.curated.exon
+
+$AA/arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix "MoEx10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
+
+.. Need to continue and check
+
+September 26-27, 2012
+------------------
+** Update Three Prime Array annotations with latest BrainArray **
+
+*update BrainArray
+On Fjord: Update to BrainArray Version 15, for R 2.15.1
+Saw that /tools/R is also at 2.15.1 so did
+R CMD INSTALL mouse4302mmentrezgcdf_15.1.0.tar.gz
+R CMD INSTALL moex10stv1mmentrezgcdf_15.1.0.tar.gz
+there as well. The following processing was done on castor
+
+*Create ThreePrime expression matrix, "curated" set of samples
+mkdir $AA/data/20120926.curated.3prime
+mkdir  $AA/data/20120926.curated.3prime/tmp
+cd  $AA/data/20120926.curated.3prime/tmp
+
+Following is a "one-off" recovery, output file is now archived in allarrays/auxfiles
+sed 's/Volumes/net/g' OriginalThreePrimeCelFiles_os_x | sed 's/Arrays/arrays/g' > OriginalThreePrimeCelFiles_unix
+
+$AA/arraypipeline/normalize_and_probeset_summarize.sh $AA/auxfiles/OriginalThreePrimeCelFiles_unix "Mouse4302_Mm_ENTREZG" $AA/data $AA/tmp >& OriginalThreePrime.logfile & 
+
+cd  $AA/data/20120926.curated.3prime
+Get ProbesetID into top left corner
+echo -e 'ProbesetID' emat.tsv > tempfile
+cat ProbesetIDString emat.tsv > tempfile ; mv tempfile emat.tsv
+We will need to be getting rid of AFFX probes
+Line number of first AFFX probe
+cat -n emat.tsv | grep AFFX | awk '{print $1}' | head -1
+head -17307 emat.tsv  > tempfile ; mv -f tempfile emat.tsv 
+
+*VERSAM processing
+$AA/arraypipeline/VERASAMpipelineWrapperThreePrime.sh >& VERASAMpipelineWrapper.log & 
+
+*Calculate lambda cutoff
+Need to re-assess lambda cutoff
+mkdir /users/thorsson/allarrays/arraypipeline/tmp
+cd /users/thorsson/allarrays/arraypipeline/tmp
+grep 0000 $AA/auxfiles/ThreePrimeMasterFile.tsv | awk '{OFS="\t"; print $3,$2}' > tempfile
+Edit to yield only triplicated 
+mv tempfile unstim-groupings.tsv
+$AA/arraypipeline/VERASAMpipeline.sh $AA/data/20120926.curated.3prime/emat.tsv unstim-groupings.tsv BMDM_Bl6_LPS_0000___Female
+
+R --no-restore --no-save < /users/thorsson/allarrays/arraypipeline/ControlComparison.R
+ mean(collect)
+[1] 26.44526
+
+e.g. we will use lambda.cutoff <- 26.44526
+
+*Process non-replicated samples
+$AA/arraypipeline/NonRepPipeline.sh  $AA/data/20120926.curated.3prime/emat.tsv
+
+*Update NCBI mappings the usual way
+
+*Create Mapping file between psois and entrez IDs (Annotations start here!)
+awk '{print $1}' emat.tsv > MoGene4302_Mm_ENTREZG_psid
+tail -n +2  MoGene4302_Mm_ENTREZG_psid >  tempfile ; mv -f tempfile MoGene4302_Mm_ENTREZG_psid
+cat MoGene4302_Mm_ENTREZG_psid | sed 's/\_at//g' > MoGene4302_Mm_ENTREZG_eid
+~/bin/reMap.py MoGene4302_Mm_ENTREZG_eid 1 ~/data/ncbi/gene_info_simplified_mouse 1 2 > MoGene4302_Mm_ENTREZG_symbol
+paste MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_eid MoGene4302_Mm_ENTREZG_symbol > MoGene4302_Mm_ENTREZG_mapfile
+echo -e 'ProbesetID\tEntrezID\tGeneSymbol' | cat - MoGene4302_Mm_ENTREZG_mapfile  > tempfile
+mv -f tempfile MoGene4302_Mm_ENTREZG_mapfile
+rm -f MoGene4302_Mm_ENTREZG_eid MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_symbol
+cp -p MoGene4302_Mm_ENTREZG_mapfile $AA/annotation/.
+
+*Create R versions of matrices
+ln -s  ~/allarrays/data/20120926.curated.3prime expression_data
+
+clean up, as the following writes to ~/tfinf/annotations AND ~/tfinf/expression_data
+
+cd ~/tfinf/R
+R --no-restore  --no-save < generateRObjectsBrainArray.R 
+.. and so on as per ~/tfinf/R write-up
+
 August 25, 2010
 ----------------
-
 Reprocess exon arrays with new 6hr triplicate
 
 Run on fjord
