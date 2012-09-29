@@ -33,7 +33,7 @@ for (( i=0 ; i<$nc ; i++ )); do
     ln -s $cfile_i .
 done
 
-R --vanilla --slave --args filelist . $cdfName  < $AA/arraypipeline/normalize_and_probeset_summarize.R
+R --no-restore --no-save --args filelist . $cdfName  < $AA/arraypipeline/normalize_and_probeset_summarize.R
 
 ## Move files out of Temp dir and clean up
 mv emat.RData $OUTDIR

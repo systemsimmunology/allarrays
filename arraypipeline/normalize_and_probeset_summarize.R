@@ -20,27 +20,16 @@ library(gcrma)
 filenames <- as.vector(read.table(filelist,as.is=TRUE)$V)
 ## celfile.path
 
-## Read probevel data into AffyBatch object
-rawdata<-ReadAffy(filenames=filenames,celfile.path=celfile.path, cdfname=cdfName)
-
-## Change to custom CDF (hopefully obsolete by using this in ReadAffy 
-## rawdata@cdfName <- "Mouse4302_Mm_ENTREZG"
-## rawdata@cdfName <- "MoEx10stv1_Mm_ENTREZG"
-
-## Background correct, Normalize, Probeset Summarize
-eset <- rma(rawdata) ## rma or gcrma
-emat <- exprs(eset)
-
-## Insert the leading cell of matrix for printing
-matrixPrintFormat <- function( matrix,topLeftString="" ){
-  rownames <- rownames(matrix)
-  colnames <- colnames(matrix)
-  outMat <- cbind(rownames,matrix)
-  outMat <- rbind(c(topLeftString,colnames),outMat)
-  rownames(outMat) <- NULL
-  colnames(outMat) <- NULL
-  return(outMat)
+if ( length(filenames) <= 200 ){ ## Have not tested the limit on this. ReadyAffy has problems above 300 on castor
+  ## Read probevel data into AffyBatch object
+  rawdata<-ReadAffy(filenames=filenames,celfile.path=celfile.path, cdfname=cdfName)
+  ## Background correct, Normalize, Probeset Summarize
+  eset <- rma(rawdata) ## rma or gcrma
+} else {
+  eset <- justRMA(cdfname=cdfName) ## justRMA does not use ReadAffy and 
 }
+  
+emat <- exprs(eset)
 
 ## Save
 save(emat,file="emat.RData")
