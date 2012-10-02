@@ -1,35 +1,113 @@
+October 1, 2012
+---------------
 
-September 28, 2012
------------------ 
+** Curated Exon: Update Exon annotations with latest BrainArray for LPS timecourse**
 
-Looking into renormalizing all arrays with brainaryy
+*Create Exon expression matrix, "curated" set of samples
+mkdir $AA/data/20121001.curated.exon
+cd $AA/data/20121001.curated.exon
 
+$AA/arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix "MoEx10stv1_Mm_ENTREZG" ~/allarrays/data/20121001.curated.exon ~/allarrays/data/20121001.curated.exon/tmp
+#insert ProbesetID by hand
 
-(Note done yet: realizing that this is for a smaller set of "curated" LPS-only samples, used currently for ChIP seq analysis
-To do properly for "allarrays" we probably need to redo expression_set.tsv and Data_Matrix_tsv in folders in 
-~/data/ImmunoRepository/sampleData/microarray/runs/
-Might be doable given scripts below, including median_combine_replicates.R
+R --no-restore --slave --args emat.tsv $AA/auxfiles/LPSexonCelFiles-groupings.tsv eemat.tsv  < $AA/arraypipeline/median_combine_replicates.R
+~/bin/reMap.py eemat.tsv 1 $AA/annotation/MoEx10stv1_Mm_ENTREZG_mapfile 1 2 | sed 's/ProbesetID/EntrezID/g' > expmat.tsv 
+R --no-restore --slave < $AA/utils/ExpmatToDM.R 
+cp -p  ../20100407.curated.exon/sglist.RData . 
+cp -p  ../20100407.curated.exon/CSSs.RData .
+
+October 1, 2012
+---------------
+Same reprocessing of all arrays as below, but this time for 3prime
+
+data/ImmunoRepository/sampleData/microarray/runs
+Aderem Three Prime Arrays_2009-05-07_at_00.06.21
+
+Run anywhere:
+R --no-restore --no-save < ../arraypipeline/AllThreePrimeArraysSamplesAndGroups.R
+cut -f 3 AllThreePrimeArraysSampleInfo.tsv | sort | uniq > AllThreePrimeArrayPaths.txt
+cut -f 1,2 AllThreePrimeArraysSampleInfo.tsv | sort | uniq > AllThreePrime-groupings.tsv
+cp -p AllThreePrimeArrayPaths.txt $AA/auxfiles/.
+cp -p AllThreePrime-groupings.tsv $AA/auxfiles/.
+
+mkdir $AA/data/20121001.3prime
+cd $AA/data/20121001.3prime
+
+* Normalize
+$AA/arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/AllThreePrimeArrayPaths.txt "Mouse4302_Mm_ENTREZG" ~/allarrays/data/20121001.3prime ~/allarrays/data/20121001.3prime/tmp
+
+* Median combine and transform
+R --no-restore --slave --args emat.tsv $AA/auxfiles/AllThreePrime-groupings.tsv eemat.tsv  < $AA/arraypipeline/median_combine_replicates.R
+~/bin/reMap.py eemat.tsv 1 $AA/annotation/Mouse4302_Mm_ENTREZG_mapfile 1 2 | sed 's/ProbesetID/EntrezID/g' > expmat.tsv 
+R --no-restore --slave < $AA/utils/ExpmatToDM.R 
+cp -p  ../20090507.3prime/CSSs.tc.RData . 
+cp -p  ../20090507.3prime/dm.columns.RData . 
+
+September 28-October 1, 2012
+---------------------------- 
+
+Redo normalization of all arrays with BrainArray. So far this was done only with affy mappings.  Strategy is to retrieve list of cell files used in the normalization. Renormalize. Use median combination below to get summarized values. Might be best to aim for same column names as are used in Data_Matrix.tsv.
+
+Last successful automated pipeline run, and the one I've been using for data is 
+
+data/ImmunoRepository/sampleData/microarray/runs/
+AutomaticTasks - Gene-Level Exon Pipeline - All Exon Arrays_2009-10-15_at_16.51.44
+
+R --no-restore --no-save < ../arraypipeline/AllExonArraysSamplesAndGroups.R
+
+Cel file list
+cut -f 3 AllExonArraysSampleInfo.tsv | sort | uniq > AllExonArrayPaths.txt
+
+Grouping list
+cut -f 1,2 AllExonArraysSampleInfo.tsv | sort | uniq > AllExon-groupings.tsv
+
+cp -p AllExonArrayPaths.txt $AA/auxfiles/.
+cp -p AllExon-groupings.tsv $AA/auxfiles/.
+
+( In principle this should correspoind to the columns of the original Data_Matrix.tsv
+However the following are only in the Data_Matrix.tsv
+BMDM_Bl6_Ifn-gamma_0540_PAM3_0240_Female
+BMDM_Bl6_Ifn-gamma_1020_CpG-B_0720_Female
+BMDM_Bl6_Ifn-gamma_1020_PAM3_0720_Female
+BMDM_Bl6_Leishmania-amazonensis_0060___Female
+BMDM_Bl6_Leishmania-amazonensis_0360___Female
+BMDM_IRF1-null_Ifn-gamma_0540_PAM3_0240_Female
+BMDM_IRF1-null_Ifn-gamma_1020_CpG-B_0720_Female
+BMDM_IRF1-null_Ifn-gamma_1020_PAM3_0720_Female
+TC-1_Bl6_pigRetrovirus+miR-451_1440_PR8-Influenza_0000_Female
+TC-1_Bl6_pigRetrovirus+miR-451_1440_Unstimulated_0000_Female
+TC-1_Bl6_pigRetrovirus_1440_PR8-Influenza_0000_Female
+TC-1_Bl6_pigRetrovirus_1440_Unstimulated_0000_Female
+)
 
 mkdir $AA/data/20120928.exon
 cd $AA/data/20120928.exon
 
-AllExonArrayPaths.txt:
-cel file list, contains all files in sglist, additional unique step was needed
+* Normalize
+$AA/arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/AllExonArrayPaths.txt "MoEx10stv1_Mm_ENTREZG" ~/allarrays/data/20120928.exon ~/allarrays/data/20120928.exon/tmp
 
-$AA/arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/data/20120928.exon/AllExonArrayPaths.txt "MoEx10stv1_Mm_ENTREZG" ~/allarrays/data/20120928.exon ~/allarrays/data/20120928.exon/tmp
+* Median combine and transform
+R --no-restore --slave --args emat.tsv $AA/auxfiles/AllExon-groupings.tsv eemat.tsv  < $AA/arraypipeline/median_combine_replicates.R
+## result 227 columns (for some reason,  Lung_Bl6_Mock-infected_0000___Female is duplicated in dm.columns )
+~/bin/reMap.py eemat.tsv 1 $AA/annotation/MoEx10stv1_Mm_ENTREZG_mapfile 1 2 | sed 's/ProbesetID/EntrezID/g' > expmat.tsv 
+R --no-restore --slave < $AA/utils/ExpmatToDM.R 
 
+Sample groups should not have changed. Copy over.
+cp -p ../20091015.exon/CSSs.tc.RData  .
+cp -p ../20091015.exon/dm.columns.RData   .
 
-September 27-28, 2012
-------------------
-
-** Update Exon annotations with latest BrainArray for LPS timecourse**
-
-*Create Exon expression matrix, "curated" set of samples
-mkdir $AA/data/20120927.curated.exon
-
-$AA/arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/LPSexonCelFiles_unix "MoEx10stv1_Mm_ENTREZG" ~/allarrays/processed_data ~/allarrays/tmp
-
-.. Need to continue and check
+Oct 1, 2012
+-----------
+*Exon Array: Create Mapping file between psois and entrez IDs (Annotations start here!)
+awk '{print $1}' emat.tsv > MoEx10stv1_Mm_ENTREZG_psid
+tail -n +2  MoEx10stv1_Mm_ENTREZG_psid >  tempfile ; mv -f tempfile MoEx10stv1_Mm_ENTREZG_psid
+cat MoEx10stv1_Mm_ENTREZG_psid | sed 's/\_at//g' > MoEx10stv1_Mm_ENTREZG_eid
+~/bin/reMap.py MoEx10stv1_Mm_ENTREZG_eid 1 ~/data/ncbi/gene_info_simplified_mouse 1 2 > MoEx10stv1_Mm_ENTREZG_symbol
+paste MoEx10stv1_Mm_ENTREZG_psid MoEx10stv1_Mm_ENTREZG_eid MoEx10stv1_Mm_ENTREZG_symbol > MoEx10stv1_Mm_ENTREZG_mapfile
+echo -e 'ProbesetID\tEntrezID\tGeneSymbol' | cat - MoEx10stv1_Mm_ENTREZG_mapfile  > tempfile
+mv -f tempfile MoEx10stv1_Mm_ENTREZG_mapfile
+rm -f MoEx10stv1_Mm_ENTREZG_eid MoEx10stv1_Mm_ENTREZG_psid MoEx10stv1_Mm_ENTREZG_symbol
+cp -p MoEx10stv1_Mm_ENTREZG_mapfile $AA/annotation/.
 
 September 26-27, 2012
 ------------------
@@ -85,15 +163,15 @@ $AA/arraypipeline/NonRepPipeline.sh  $AA/data/20120926.curated.3prime/emat.tsv
 *Update NCBI mappings the usual way
 
 *Create Mapping file between psois and entrez IDs (Annotations start here!)
-awk '{print $1}' emat.tsv > MoGene4302_Mm_ENTREZG_psid
-tail -n +2  MoGene4302_Mm_ENTREZG_psid >  tempfile ; mv -f tempfile MoGene4302_Mm_ENTREZG_psid
-cat MoGene4302_Mm_ENTREZG_psid | sed 's/\_at//g' > MoGene4302_Mm_ENTREZG_eid
-~/bin/reMap.py MoGene4302_Mm_ENTREZG_eid 1 ~/data/ncbi/gene_info_simplified_mouse 1 2 > MoGene4302_Mm_ENTREZG_symbol
-paste MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_eid MoGene4302_Mm_ENTREZG_symbol > MoGene4302_Mm_ENTREZG_mapfile
-echo -e 'ProbesetID\tEntrezID\tGeneSymbol' | cat - MoGene4302_Mm_ENTREZG_mapfile  > tempfile
-mv -f tempfile MoGene4302_Mm_ENTREZG_mapfile
-rm -f MoGene4302_Mm_ENTREZG_eid MoGene4302_Mm_ENTREZG_psid MoGene4302_Mm_ENTREZG_symbol
-cp -p MoGene4302_Mm_ENTREZG_mapfile $AA/annotation/.
+awk '{print $1}' emat.tsv > Mouse4302_Mm_ENTREZG_psid
+tail -n +2  Mouse4302_Mm_ENTREZG_psid >  tempfile ; mv -f tempfile Mouse4302_Mm_ENTREZG_psid
+cat Mouse4302_Mm_ENTREZG_psid | sed 's/\_at//g' > Mouse4302_Mm_ENTREZG_eid
+~/bin/reMap.py Mouse4302_Mm_ENTREZG_eid 1 ~/data/ncbi/gene_info_simplified_mouse 1 2 > Mouse4302_Mm_ENTREZG_symbol
+paste Mouse4302_Mm_ENTREZG_psid Mouse4302_Mm_ENTREZG_eid Mouse4302_Mm_ENTREZG_symbol > Mouse4302_Mm_ENTREZG_mapfile
+echo -e 'ProbesetID\tEntrezID\tGeneSymbol' | cat - Mouse4302_Mm_ENTREZG_mapfile  > tempfile
+mv -f tempfile Mouse4302_Mm_ENTREZG_mapfile
+rm -f Mouse4302_Mm_ENTREZG_eid Mouse4302_Mm_ENTREZG_psid Mouse4302_Mm_ENTREZG_symbol
+cp -p Mouse4302_Mm_ENTREZG_mapfile $AA/annotation/.
 
 *Create R versions of matrices
 ln -s  ~/allarrays/data/20120926.curated.3prime expression_data

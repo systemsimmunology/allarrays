@@ -4,8 +4,8 @@
 ##
 
 indir.3prime <- "20090507.3prime"
-indir.exon <- "20091015.exon"
-outdir <- "20091015"
+indir.exon <- "20120928.exon"
+outdir <- "20121001"
 
 util.dir <- file.path(Sys.getenv("AA"),"utils")
 ncbi.dir <- file.path(Sys.getenv("DATA_DIR"),"ncbi")
