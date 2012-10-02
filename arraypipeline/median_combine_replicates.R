@@ -18,7 +18,13 @@ emat <- read.matrix(expfile)
 h <- numeric()
 for ( uv in uvs ){
   cols <- names(which(v==uv))
-  g <- apply(emat[,cols],1,median)
+  n.cols <- length(cols)
+  if ( n.cols == 0) stop ("Error: columns not found for ",uv,"\n")
+  if ( n.cols > 1 ){
+    g <- apply(emat[,cols],1,median)
+  } else {
+    g <- emat[,cols]
+  }
   h <- cbind(h,g)
 }
 colnames(h) <- uvs
