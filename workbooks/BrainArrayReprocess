@@ -1,3 +1,4 @@
+
 October 1, 2012
 ---------------
 
@@ -46,7 +47,7 @@ cp -p  ../20090507.3prime/dm.columns.RData .
 September 28-October 1, 2012
 ---------------------------- 
 
-Redo normalization of all arrays with BrainArray. So far this was done only with affy mappings.  Strategy is to retrieve list of cell files used in the normalization. Renormalize. Use median combination below to get summarized values. Might be best to aim for same column names as are used in Data_Matrix.tsv.
+Redo normalization of all exon arrays with BrainArray. So far this was done only with affy mappings.  Strategy is to retrieve list of cell files used in the normalization. Renormalize. Use median combination below to get summarized values. Might be best to aim for same column names as are used in Data_Matrix.tsv.
 
 Last successful automated pipeline run, and the one I've been using for data is 
 
@@ -160,6 +161,11 @@ e.g. we will use lambda.cutoff <- 26.44526
 *Process non-replicated samples
 $AA/arraypipeline/NonRepPipeline.sh  $AA/data/20120926.curated.3prime/emat.tsv
 
+*Copy sample group information
+cp ../20100407.curated.3prime/CSSs.tc.RData .
+cp ../20100407.curated.3prime/sglist.RData . 
+
+
 *Update NCBI mappings the usual way
 
 *Create Mapping file between psois and entrez IDs (Annotations start here!)
@@ -173,11 +179,13 @@ mv -f tempfile Mouse4302_Mm_ENTREZG_mapfile
 rm -f Mouse4302_Mm_ENTREZG_eid Mouse4302_Mm_ENTREZG_psid Mouse4302_Mm_ENTREZG_symbol
 cp -p Mouse4302_Mm_ENTREZG_mapfile $AA/annotation/.
 
+
+
+
 *Create R versions of matrices
 ln -s  ~/allarrays/data/20120926.curated.3prime expression_data
 
 clean up, as the following writes to ~/tfinf/annotations AND ~/tfinf/expression_data
-
 cd ~/tfinf/R
 R --no-restore  --no-save < generateRObjectsBrainArray.R 
 .. and so on as per ~/tfinf/R write-up
@@ -319,6 +327,8 @@ grep PAM3 celfiles_no_path > $AA/auxfiles/PAM3threePrimeCelFiles-groupings.tsv
 April 23, 2010
 --------------
 
+*Include MyD88, TRIF, other TLR4 stim in normalized expression metrix (prior to replicate combination)
+
 In auxfiles
 
 MyD88 KO
@@ -340,8 +350,10 @@ arraypipeline/normalize_and_probeset_summarize.sh ~/allarrays/auxfiles/OriginalT
 April 21, 2010
 --------------
 
+*Create scripts to run VERA and SAM on 3prime arrays. LPS only, so far.
+
 In any directory do
-../VERASAMpipeline.sh $HOME/allarrays/data/20100407.curated.3prime/emat.tsv /Users/thorsson/allarrays/auxfiles/LPSthreePrimeCelFiles-groupings.tsv BMDM_Bl6_LPS_0000___Female
+$AA/arraypipeline/VERASAMpipeline.sh $HOME/allarrays/data/20100407.curated.3prime/emat.tsv /Users/thorsson/allarrays/auxfiles/LPSthreePrimeCelFiles-groupings.tsv BMDM_Bl6_LPS_0000___Female
 cp expression.mus /Users/thorsson/allarrays/data/20100407.curated.3prime/LPS.mus
 cp expression.log10_ratios /Users/thorsson/allarrays/data/20100407.curated.3prime/LPS.log10_ratios
 cp expression.lambdas /Users/thorsson/allarrays/data/20100407.curated.3prime/LPS.lambdas      
@@ -402,6 +414,8 @@ R --vanilla --slave < ../../utils/ExpmatToDM.R
 
 April 6, 2010
 -------------
+
+( Comment added October 2, 2012: Incorrect names of files. Prefixes should be MoEx10stv1_Mm_ENTREZG and Mouse4302_Mm_ENTREZG )
 
 cd $AA/processed_data/LPSExon
 awk '{print $1}' eemat.tsv | sed 's/\_at//g' | tail +2 > MoGene10stv1_Mm_ENTREZG_eid

@@ -3,9 +3,9 @@
 ##
 ##
 
-indir.3prime <- "20090507.3prime"
+indir.3prime <- "20121001.3prime"
 indir.exon <- "20120928.exon"
-outdir <- "20121001"
+outdir <- "20121002"
 
 util.dir <- file.path(Sys.getenv("AA"),"utils")
 ncbi.dir <- file.path(Sys.getenv("DATA_DIR"),"ncbi")
@@ -38,7 +38,7 @@ data.path.3prime <- indir.3prime
 ### Load expression data (saved locally as network transfer is slow )
 ###
  
-load(paste(indir.3prime,"dm.3prime.allarrays.RData",sep="/"))
+load(paste(indir.3prime,"dm.RData",sep="/"))
 dm.3prime <- dm; rm(dm) 
 
 ##load("data/dm.3prime.released.RData")
