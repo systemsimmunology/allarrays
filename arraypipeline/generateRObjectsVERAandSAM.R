@@ -185,7 +185,6 @@ save( list=all.Cube.objects, file=paste(expression.dir,"all.Cube.objects.RData",
 
 max.intensity <- apply(lps.mus,1,max) 
 lps.mat.max1 <- lps.mus/max.intensity ## this one will be modified for nucloc
-lps.mat.max1.exp <- lps.mus/max.intensity ## this one will retain expression vars 
 
 ##max.intensity <- apply(pam2.mus,1,max) 
 pam2.mat.max1 <- pam2.mus/max.intensity
@@ -203,7 +202,7 @@ r848.mat.max1 <- r848.mus/max.intensity
 cpg.mat.max1 <- cpg.mus/max.intensity
 
 ofile <- paste(expression.dir,"scaled.mus.objects.RData",sep="/")
-savelist <- c("max.intensity","lps.mat.max1","lps.mat.max1.exp","pam2.mat.max1","pam3.mat.max1","polyIC.mat.max1","r848.mat.max1","cpg.mat.max1" )
+savelist <- c("max.intensity","lps.mat.max1","pam2.mat.max1","pam3.mat.max1","polyIC.mat.max1","r848.mat.max1","cpg.mat.max1" )
 
 save(list=savelist, file=ofile)
 
