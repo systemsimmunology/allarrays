@@ -1,0 +1,187 @@
+Compare Three Prime and Exon Array Intensities and Ratios
+==========================================================
+
+```{r echo=FALSE}
+util.dir <- file.path(Sys.getenv("AA"),"utils")
+data.dir <- file.path(Sys.getenv("AA"),"data") 
+load(paste(Sys.getenv("DATA_DIR"),"ncbi/gene.symbol.RData",sep="/"))
+source(paste(util.dir,"utilitiesSigTest.R",sep="/"))
+```
+
+*Data Directories* Different versions of normalized data sets 
+
+Curated dataset, includes VERA SAM statistical testing
+```{r}
+dir3prime.cur <- paste(data.dir,"20120926.curated.3prime",sep="/")
+```
+All 3 prime arrays
+```{r}
+dir3prime.all <- paste(data.dir,"20121001.3prime",sep="/")
+```
+
+Exon LPS timecourse
+```{r}
+direxon.cur <- paste(data.dir,"20121001.curated.exon",sep="/")
+```
+
+All exon arrays
+```{r}
+direxon.all <- paste(data.dir,"20120928.exon",sep="/")
+```
+
+chipseq uses: 3prime.cur and exon.cur  
+tfinf uses: 3prime.cur  
+allarrays uses: 3prime.all, exon.all  
+
+*Data Loading*
+
+Load VERA SAM processed
+
+```{r}
+selectiveLoad("lps.lambdas",paste(dir3prime.cur,"all.lambdas.objects.RData",sep="/"))
+selectiveLoad("lps.mus",paste(dir3prime.cur,"all.mus.objects.RData",sep="/"))
+selectiveLoad("lps.ratios",paste(dir3prime.cur,"all.ratios.objects.RData",sep="/"))
+lambda.cutoff <- 26.44526
+```
+
+Load non-stat tested
+```{r}
+load(paste(dir3prime.all,"dm.RData",sep="/"))
+dm.3prime <- dm
+load(paste(dir3prime.all,"CSSs.tc.RData",sep="/"))
+CSSs.tc.3prime <- CSSs.tc
+
+load(paste(direxon.all,"dm.RData",sep="/"))
+dm.exon <- dm
+load(paste(direxon.all,"CSSs.tc.RData",sep="/"))
+CSSs.tc.exon <- CSSs.tc
+
+load(paste(direxon.cur,"dm.RData",sep="/"))
+dm.exon <- dm
+load(paste(direxon.cur,"CSSs.tc.RData",sep="/"))
+CSSs.tc.exon <- CSSs.tc
+```
+Note: order dependence above. We will use the curated Exon set below, containing LPS timecourse.
+
+Probeset IDs on both platform
+```{r}
+onboth.ps <- intersect(rownames(dm.exon),rownames(lps.mus))
+```
+
+Ratios on exon arrays
+```{r}
+rats.exon <- log10(dm.exon[,2:ncol(dm.exon)]/dm.exon[,1])
+```
+
+Absolute values
+---------------
+
+```{r}
+plot(log10(lps.mus[onboth.ps,"min0"]),log10(dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"]),xlab="3 prime",ylab="exon",main="Log10(Intensity), T=0")
+```
+
+Exon abs values 2-3 times higher than three prime.  Find more quantitative estimate esimate. Look at exon deciles over three-prime deciles. 
+```{r}
+dec.comp <- quantile(probs=seq(0.1,0.9,0.1),x=dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"])/quantile(probs=seq(0.1,0.9,0.1),x=lps.mus[onboth.ps,"min0"])
+dec.comp
+```
+
+Ratio of medians of each distribution
+```{r}
+median.ratio <- dec.comp[5]
+median.ratio
+```
+
+Plot redone
+```{r echo=FALSE}
+plot(log10(lps.mus[onboth.ps,"min0"]),log10(dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"]),xlab="3 prime",ylab="exon",main="Log10(Intensity), T=0")
+abline(0,1)
+abline(log10(median.ratio),1) # %50 quantile
+```
+
+Can also try to look at distributions with kernel smoothing
+```{r chache=T}
+library(KernSmooth)
+x <- cbind(log10(lps.mus[onboth.ps,"min0"]),log10(dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"]))
+est <- bkde2D( x, bandwidth=c(0.2,0.2) ) # larger bandwithds <-> wider kernel
+contour(est$x1,est$x2,est$fhat,xlab="3 prime",ylab="exon",main="Log10(Intensity), T=0")
+abline(0,1)
+abline(log10(median.ratio),1)
+```
+
+Two peak structure is somewhat baffling. Slope close to kernel overall "axis"
+Perhaps upper peak is the "true" expressed ones we care about ?
+
+
+Ratios
+------
+Ratios at 2 hrs
+```{r}
+par(mfrow=c(2,2))
+plot(lps.ratios[onboth.ps,"min60"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0060___Female"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=1 hr")
+abline(0,1)
+plot(lps.ratios[onboth.ps,"min120"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0120___Female"], xlab="3 prime",ylab="exon",main="Log10 Ratios, T=2 hr")
+abline(0,1)
+plot(lps.ratios[onboth.ps,"hr4"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=4 hr")
+abline(0,1)
+plot(lps.ratios[onboth.ps,"hr6"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0360___Female"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=6 hr")
+abline(0,1)
+```
+
+
+Interesting that this is mostly circular, though induced genes are on diagonal
+probably has to do with how few induced genes there are relative to whole
+
+```{r eval=FALSE}
+# analysis to explore later. Seems like it is hard to see more than cricular contours 
+x <- cbind(lps.ratios[onboth.ps,"min120"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0120___Female"])
+est <- bkde2D( x, bandwidth=c(0.2,0.2) ) # larger bandwithds <-> wider kernel
+est <- bkde2D( x, gridsize = c(1000L, 1000L),bandwidth=c(0.2,0.2) ) # larger bandwithds <-> 
+wider kernel
+contour(est$x1,est$x2,est$fhat,xlab="3 prime",ylab="exon",main="Log10 Ratios, T=240",nlevels=50)
+#Weird, elongation only happens when gridsize upped from default of 51L to 500L or more 
+#And what is this L thing?
+```
+
+*Decile Plots*
+
+```{r}
+v3 <- quantile(x=lps.ratios[onboth.ps,"hr4"],probs=seq(0.1,0.9,0.1))
+ve <- quantile(x=rats.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"],probs=seq(0.1,0.9,0.1))
+plot(v3,ve)
+abline(0,1)
+```
+
+Fairly consistent
+For very low ratios ve deciles are somewhat higher
+
+
+At the very highest percentiles, we do start to see some differences
+```{r}
+v3 <- quantile(x=lps.ratios[onboth.ps,"hr4"],probs=seq(0.01,0.99,0.01))
+ve <- quantile(x=rats.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"],probs=seq(0.01,0.99,0.01))
+plot(v3,ve)
+abline(0,1)
+```
+
+Here's the full QQ-plot
+```{r}
+qqplot(lps.ratios[onboth.ps,"hr4"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"])
+```
+
+Lambda cutoff in terms of ratios
+
+```{r}
+plot(lps.ratios[onboth.ps,"min120"],lps.lambdas[onboth.ps,"min120"])
+abline(h=lambda.cutoff)
+```
+
+Ratio of nearest probeset to cutoff
+```{r}
+log10ratcut <- abs(lps.ratios[which.min(abs(lps.lambdas[,"min120"]-lambda.cutoff)),"min120"])
+ratcut <- 10^log10ratcut
+log10ratcut
+ratcut
+```
+This probeset has a mu value of ```r lps.mus[names(which.min(abs(lps.lambdas[,"min120"]-lambda.cutoff))),"min120"]```.
+
