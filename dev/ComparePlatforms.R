@@ -184,6 +184,8 @@ ratcut <- 10^log10ratcut
 # Let's see if this changes the correspondence between constitutive counts on the two platforms
 
 mu.cutoff <- 200 
+imax <- 6
+
 mu.high.cutoff <- mu.cutoff
 high.expressors <- names(which(apply(lps.mus[,1:imax]>mu.high.cutoff,1,sum)==imax))
 constitutive.3prime.ps <- setdiff(high.expressors,lps.6hr.ps)
