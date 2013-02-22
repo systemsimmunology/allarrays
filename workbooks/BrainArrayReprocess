@@ -1,4 +1,17 @@
 
+Feb 21, 2013
+------------
+
+For three prime curated 20120926.curated.3prime, noticed that I had omitted to note the lambda.cutoff for 0.01%
+Redid the calculation (using castor) as described in September 26-27, 2012
+Here are both
+
+0.05% false positives
+lambda.cutoff <- 26.44526
+
+0.01% false positives
+lambda.cutoff <- 67.22123
+
 October 1, 2012
 ---------------
 

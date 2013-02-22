@@ -41,7 +41,6 @@ Load VERA SAM processed
 selectiveLoad("lps.lambdas",paste(dir3prime.cur,"all.lambdas.objects.RData",sep="/"))
 selectiveLoad("lps.mus",paste(dir3prime.cur,"all.mus.objects.RData",sep="/"))
 selectiveLoad("lps.ratios",paste(dir3prime.cur,"all.ratios.objects.RData",sep="/"))
-lambda.cutoff <- 26.44526
 ```
 
 Load non-stat tested
@@ -200,14 +199,15 @@ names(ncbiID) <- rownames(lps.mus)
 ```
 
 ```{r}
-mu.cutoff <- 200 
+mu.cutoff <- 300
 imax <- 8 ## imax=8 <-> 6 hrs 
-mu.high.cutoff <- mu.cutoff
+lambda.cutoff <- 26.44526 ## 0.05% cutoff September 2012
 
 lps.6hr.ps <- rownames(sigSlice(lambda.cutoff,lps.ratios[,1:(imax-1)],lps.lambdas[,1:(imax-1)]))
 low.expressors <- names(which(apply(lps.mus[lps.6hr.ps,1:imax]<mu.cutoff,1,sum)==imax))
 lps.6hr.ps <- setdiff(lps.6hr.ps,low.expressors)
 
+mu.high.cutoff <- 300
 high.expressors <- names(which(apply(lps.mus[,1:imax]>mu.high.cutoff,1,sum)==imax))
 constitutive.3prime.ps <- setdiff(high.expressors,lps.6hr.ps)
 constitutive.3prime.eid <- as.character(ncbiID[constitutive.3prime.ps])
