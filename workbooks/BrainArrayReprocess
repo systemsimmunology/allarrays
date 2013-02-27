@@ -1,4 +1,33 @@
 
+Feb 22-Feb 25 2013
+------------------
+
+** CuratedExon, LPS timecourse: perform VERA SAM statistical testing ***
+( has not been done earlier. Have so far just used median. See e.g. Oct 1, 2012)
+
+Wrote
+
+arraypipeline/VERASAMpipelineWrapperExonLPS.sh
+
+Ran in tmp folder on castor (/users/thorsson/allarrays/data/20121001.curated.exon/tmp)
+$AA/arraypipeline/VERASAMpipelineWrapperThreePrime.sh 
+
+Create R objects
+The following were executed in the R environment, based on ~/tfinf/R/generateRObjectsBrainArray.R
+
+setwd("~/allarrays/data/20121001.curated.exon")
+expression.directory <- getwd()
+source("~/tfinf/R/utilitiesExpression.R")
+conds <- c("min0","min60","min120","hr4","hr6","hr12")
+res <- readVERAandSAMfiles("LPS",expression.directory,niceheaders=conds)
+lps.mus <- res$mus
+lps.ratios <- res$ratios
+lps.lambdas <- res$lambdas
+lps.muStdErrs <- res$muStdErrs
+save(lps.mus,file=paste(expression.directory,"lps.mus.RData",sep="/"))
+save(lps.ratios,file=paste(expression.directory,"lps.ratios.RData",sep="/"))
+save(lps.lambdas,file=paste(expression.directory,"lps.lambdas.RData",sep="/"))
+
 Feb 21, 2013
 ------------
 

@@ -35,12 +35,21 @@ allarrays uses: 3prime.all, exon.all
 *Data Loading*
 
 Load VERA SAM processed
-
 ```{r}
 selectiveLoad("lps.lambdas",paste(dir3prime.cur,"all.lambdas.objects.RData",sep="/"))
 selectiveLoad("lps.mus",paste(dir3prime.cur,"all.mus.objects.RData",sep="/"))
 selectiveLoad("lps.ratios",paste(dir3prime.cur,"all.ratios.objects.RData",sep="/"))
+lps.3prime.lambdas <- lps.lambdas
+lps.3prime.mus <- lps.mus
+lps.3prime.ratios <- lps.ratios
+load(paste(direxon.cur,"lps.lambdas.RData",sep="/"))
+load(paste(direxon.cur,"lps.mus.RData",sep="/"))
+load(paste(direxon.cur,"lps.ratios.RData",sep="/"))
+lps.exon.lambdas <- lps.lambdas
+lps.exon.mus <- lps.mus
+lps.exon.ratios <- lps.ratios
 ```
+
 
 Load non-stat tested
 ```{r}
@@ -63,46 +72,42 @@ Note: order dependence above. We will use the curated Exon set below, containing
 
 Probeset IDs on both platform
 ```{r}
-onboth.ps <- intersect(rownames(dm.exon),rownames(lps.mus))
-```
-
-Ratios on exon arrays
-```{r}
-rats.exon <- log10(dm.exon[,2:ncol(dm.exon)]/dm.exon[,1])
+onboth.ps <- intersect(rownames(lps.exon.mus),rownames(lps.3prime.mus))
 ```
 
 Absolute values
 ---------------
 
 ```{r}
-plot(lps.mus[onboth.ps,"min0"],dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"],xlab="3 prime",ylab="exon",main="Intensity, T=0",log='xy')
+plot(lps.3prime.mus[onboth.ps,"min0"],lps.exon.mus[onboth.ps,"min0"],xlab="3 prime",ylab="exon",main="Intensity, T=0",log='xy')
 ```
 
 Exon abs values 2-3 times higher than three prime.  Find more quantitative estimate esimate. Look at exon deciles over three-prime deciles. 
 ```{r}
-quantile(probs=seq(0.5,0.95,0.05),x=dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"])
-quantile(probs=seq(0.5,0.95,0.05),x=lps.mus[onboth.ps,"min0"])
+quantile(probs=seq(0.5,0.95,0.05),x=lps.exon.mus[onboth.ps,"min0"])
+quantile(probs=seq(0.5,0.95,0.05),x=lps.3prime.mus[onboth.ps,"min0"])
 ```
 Would seem we would be most interested in quantiles above 70.
 
-
 ```{r}
-dec.comp <- quantile(probs=seq(0.5,0.95,0.05),x=dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"])/quantile(probs=seq(0.5,0.95,0.05),x=lps.mus[onboth.ps,"min0"])
+dec.comp <- quantile(probs=seq(0.5,0.95,0.05),x=lps.exon.mus[onboth.ps,"min0"])/quantile(probs=seq(0.5,0.95,0.05),x=lps.3prime.mus[onboth.ps,"min0"])
 dec.comp
-quantile(probs=seq(0.5,0.95,0.05),x=dm.exon[onboth.ps,"BMDM_Bl6_LPS_0060___Female"])/quantile(probs=seq(0.5,0.95,0.05),x=lps.mus[onboth.ps,"min60"])
-quantile(probs=seq(0.5,0.95,0.05),x=dm.exon[onboth.ps,"BMDM_Bl6_LPS_0120___Female"])/quantile(probs=seq(0.5,0.95,0.05),x=lps.mus[onboth.ps,"min120"])
-quantile(probs=seq(0.5,0.95,0.05),x=dm.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"])/quantile(probs=seq(0.5,0.95,0.05),x=lps.mus[onboth.ps,"hr4"])
+quantile(probs=seq(0.5,0.95,0.05),x=lps.exon.mus[onboth.ps,"min60"])/quantile(probs=seq(0.5,0.95,0.05),x=lps.3prime.mus[onboth.ps,"min60"])
+quantile(probs=seq(0.5,0.95,0.05),x=lps.exon.mus[onboth.ps,"min120"])/quantile(probs=seq(0.5,0.95,0.05),x=lps.3prime.mus[onboth.ps,"min120"])
+quantile(probs=seq(0.5,0.95,0.05),x=lps.exon.mus[onboth.ps,"hr4"])/quantile(probs=seq(0.5,0.95,0.05),x=lps.3prime.mus[onboth.ps,"hr4"])
 ```
 
-Ratio of medians of each distribution
+Ratio of medians of each distribution, and ratio of 90th percentile
 ```{r}
 median.ratio <- dec.comp["50%"]
 median.ratio
+per90.ratio <- dec.comp["90%"]
+per90.ratio
 ```
 
 Plot redone
 ```{r echo=FALSE}
-plot(lps.mus[onboth.ps,"min0"],dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"],xlab="3 prime",ylab="exon",main="Intensity, T=0",log='xy')
+plot(lps.3prime.mus[onboth.ps,"min0"],lps.exon.mus[onboth.ps,"min0"],xlab="3 prime",ylab="exon",main="Intensity, T=0",log='xy')
 abline(0,1,col='blue')
 abline(log10(median.ratio),1,col='red') # 50% quantile
 abline(log10(dec.comp["90%"]),1,col='orange') # 90% quantile
@@ -124,7 +129,7 @@ Purple horizontal: 200 units, median converted ```r 200*median.ratio```
 Can also try to look at distributions with kernel smoothing
 ```{r chache=T}
 library(KernSmooth)
-x <- cbind(log10(lps.mus[onboth.ps,"min0"]),log10(dm.exon[onboth.ps,"BMDM_Bl6_LPS_0000___Female"]))
+x <- cbind(log10(lps.3prime.mus[onboth.ps,"min0"]),log10(lps.exon.mus[onboth.ps,"min0"]))
 est <- bkde2D( x, bandwidth=c(0.2,0.2) ) # larger bandwithds <-> wider kernel
 contour(est$x1,est$x2,est$fhat,xlab="3 prime",ylab="exon",main="Log10(Intensity), T=0")
 abline(0,1)
@@ -141,35 +146,41 @@ Correspondence of lambda.cutoff to ratio cutoff
 Lambda cutoff in terms of ratios.  What ratio does the lamba.cutoff correspond to?  Let's look at the ratio of 2hrs to unstim.
 
 ```{r}
-plot(lps.ratios[onboth.ps,"min120"],lps.lambdas[onboth.ps,"min120"])
+plot(lps.3prime.ratios[onboth.ps,"min120"],lps.3prime.lambdas[onboth.ps,"min120"])
 lambda.cutoff <- 26.44526 ## 0.05% cutoff September 2012
 abline(h=lambda.cutoff)
 ```
 
 Ratio of nearest probeset to cutoff
 ```{r}
-log10ratcut <- abs(lps.ratios[which.min(abs(lps.lambdas[,"min120"]-lambda.cutoff)),"min120"])
+log10ratcut <- abs(lps.3prime.ratios[which.min(abs(lps.3prime.lambdas[,"min120"]-lambda.cutoff)),"min120"])
 ratcut <- 10^log10ratcut
 log10ratcut
 ratcut
 ```
 The value ```r ratcut``` is the ratio corresponding to lambda.cutoff (with numerator larger than denominator).
 
-In principle, if we didn't have the statistics, we would use this ratio cutoff and get similar results.
+In principle, if we didn't have the statistics, we would use this ratio cutoff and get similar results, for three prime. 
 
+Here is the ratio-lambda curve for Exon arrays:
+
+```{r}
+plot(lps.exon.ratios[onboth.ps,"min120"],lps.exon.lambdas[onboth.ps,"min120"])
+abline(h=lambda.cutoff)
+```
 
 Ratio comparison between platforms
 ----------------------------------
 
 ```{r}
 par(mfrow=c(2,2))
-plot(lps.ratios[onboth.ps,"min60"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0060___Female"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=1 hr")
+plot(lps.3prime.ratios[onboth.ps,"min60"],lps.exon.ratios[onboth.ps,"min60"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=1 hr")
 abline(0,1)
-plot(lps.ratios[onboth.ps,"min120"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0120___Female"], xlab="3 prime",ylab="exon",main="Log10 Ratios, T=2 hr")
+plot(lps.3prime.ratios[onboth.ps,"min120"],lps.exon.ratios[onboth.ps,"min120"], xlab="3 prime",ylab="exon",main="Log10 Ratios, T=2 hr")
 abline(0,1)
-plot(lps.ratios[onboth.ps,"hr4"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=4 hr")
+plot(lps.3prime.ratios[onboth.ps,"hr4"],lps.exon.ratios[onboth.ps,"hr4"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=4 hr")
 abline(0,1)
-plot(lps.ratios[onboth.ps,"hr6"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0360___Female"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=6 hr")
+plot(lps.3prime.ratios[onboth.ps,"hr6"],lps.exon.ratios[onboth.ps,"hr6"],xlab="3 prime",ylab="exon",main="Log10 Ratios, T=6 hr")
 abline(0,1)
 ```
 
@@ -179,7 +190,7 @@ Probably has to do with how few induced genes there are relative to whole
 
 ```{r eval=FALSE}
 # analysis to explore later. Seems like it is hard to see more than cricular contours 
-x <- cbind(lps.ratios[onboth.ps,"min120"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0120___Female"])
+x <- cbind(lps.3prime.ratios[onboth.ps,"min120"],lps.exon.ratios[onboth.ps,"min120"])
 est <- bkde2D( x, bandwidth=c(0.2,0.2) ) # larger bandwithds <-> wider kernel
 est <- bkde2D( x, gridsize = c(1000L, 1000L),bandwidth=c(0.2,0.2) ) # larger bandwithds <-> 
 wider kernel
@@ -191,25 +202,24 @@ contour(est$x1,est$x2,est$fhat,xlab="3 prime",ylab="exon",main="Log10 Ratios, T=
 *Decile Plots*
 
 ```{r}
-v3 <- quantile(x=lps.ratios[onboth.ps,"hr4"],probs=seq(0.1,0.9,0.1))
-ve <- quantile(x=rats.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"],probs=seq(0.1,0.9,0.1))
+v3 <- quantile(x=lps.3prime.ratios[onboth.ps,"hr4"],probs=seq(0.1,0.9,0.1))
+ve <- quantile(x=lps.exon.ratios[onboth.ps,"hr4"],probs=seq(0.1,0.9,0.1))
 plot(v3,ve)
 abline(0,1)
 ```
 The highest percentile in this plot is 90. Fairly consistent in this range.
 
-
 At the very highest percentiles, we do start to see some differences
 ```{r}
-v3 <- quantile(x=lps.ratios[onboth.ps,"hr4"],probs=seq(0.01,0.99,0.01))
-ve <- quantile(x=rats.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"],probs=seq(0.01,0.99,0.01))
+v3 <- quantile(x=lps.3prime.ratios[onboth.ps,"hr4"],probs=seq(0.01,0.99,0.01))
+ve <- quantile(x=lps.exon.ratios[onboth.ps,"hr4"],probs=seq(0.01,0.99,0.01))
 plot(v3,ve)
 abline(0,1)
 ```
 
 Here's the full QQ-plot, for hr 4
 ```{r}
-qqplot(lps.ratios[onboth.ps,"hr4"],rats.exon[onboth.ps,"BMDM_Bl6_LPS_0240___Female"])
+qqplot(lps.3prime.ratios[onboth.ps,"hr4"],lps.exon.ratios[onboth.ps,"hr4"])
 abline(0,1)
 ```
 Thus the three prime ratio distribution has somewhat longer tails than the exon distribution.
@@ -224,71 +234,54 @@ sigSlice <- function( lambdaCutoff , ratioMatrix, lambdaMatrix){
   whichOnes <- unique(row.names(which(lambdaMatrix>lambdaCutoff,arr.ind=TRUE)))
   ratioMatrix[whichOnes,]  
 }
-ncbiID <- as.character(unlist(sapply(rownames(lps.mus),strsplit,split="_at")))
-names(ncbiID) <- rownames(lps.mus)
 ```
-
-
 
 *Comparison of differentially expressed genes*
 
 Three prime
 ```{r}
-mu.cutoff <- 300
+mu.cutoff.3prime <- 300
 imax <- 8 ## imax=8 <-> 6 hrs 
-lps.6hr.ps <- rownames(sigSlice(lambda.cutoff,lps.ratios[,1:(imax-1)],lps.lambdas[,1:(imax-1)]))
-low.expressors <- names(which(apply(lps.mus[lps.6hr.ps,1:imax]<mu.cutoff,1,sum)==imax))
-lps.6hr.ps <- setdiff(lps.6hr.ps,low.expressors)
+lps.6hr.3prime.ps <- rownames(sigSlice(lambda.cutoff,lps.3prime.ratios[,1:(imax-1)],lps.3prime.lambdas[,1:(imax-1)]))
+low.expressors <- names(which(apply(lps.3prime.mus[lps.6hr.3prime.ps,1:imax]<mu.cutoff.3prime,1,sum)==imax))
+lps.6hr.3prime.ps <- setdiff(lps.6hr.3prime.ps,low.expressors)
 ```
-Length of lps.6hr.ps is ```r length(lps.6hr.ps)```.
+Length of lps.6hr.3prime.ps is ```r length(lps.6hr.3prime.ps)```.
 
-Exon    
-Cutoff choice - absolute. Scale the thee prime cutoff using the top decile normalization
+
+Exon arrays.
+
 ```{r}
-abs.cutoff <- dec.comp["90%"] * mu.cutoff
+mu.cutoff.exon <- dec.comp["90%"] * mu.cutoff.3prime
+imax <- 5 ## imax=5 <-> 6 hrs 
+lps.6hr.exon.ps <- rownames(sigSlice(lambda.cutoff,lps.exon.ratios[,1:(imax-1)],lps.exon.lambdas[,1:(imax-1)]))
+low.expressors <- names(which(apply(lps.exon.mus[lps.6hr.exon.ps,1:imax]<mu.cutoff.exon,1,sum)==imax))
+lps.6hr.exon.ps <- setdiff(lps.6hr.exon.ps,low.expressors)
 ```
-
-We could use the one that was "mapped from" lambda.cutoff above, but we don't have triplicated measurements.   May have to stick with the 
-```{r}
-rat.cutoff <- 1.492107 
-rat.cutoff <- 2
-
-dm.lps.exon <- dm.exon
-## nt=5 corresponds to 6 hrs
-nt <- 5
-maxabs <- apply(dm.lps.exon[,1:nt],1,max)
-abs.logvec <- ( maxabs > abs.cutoff )
-tcs <- dm.lps.exon
-ratmat <- (tcs/tcs[,1])[,2:nt]
-maxrats <- apply(ratmat,1,max)
-minrats <- apply(ratmat,1,min)
-rat.logvec <- ( maxrats > rat.cutoff ) | ( minrats < (1/rat.cutoff) )
-diffexp.exon.ps <- names(which(abs.logvec & rat.logvec))
-```
-Length of diffexp.exon.ps is ```r length(diffexp.exon.ps)```.
-
+Length of lps.6hr.exon.ps is ```r length(lps.6hr.exon.ps)```
 
 Compare 
 ```{r}
-compareSets(intersect(lps.6hr.ps,onboth.ps),intersect(diffexp.exon.ps,onboth.ps))
+compareSets(intersect(lps.6hr.3prime.ps,onboth.ps),intersect(lps.6hr.exon.ps,onboth.ps))
 ````
 
 *Comparison of constitutive genes*
 
 Three Prime
 ```{r}
-mu.high.cutoff <- 300
-high.expressors <- names(which(apply(lps.mus[,1:imax]>mu.high.cutoff,1,sum)==imax))
-constitutive.3prime.ps <- setdiff(high.expressors,lps.6hr.ps)
+mu.high.cutoff.3prime <- 300
+imax <- 8 ## imax=8 <-> 6 hrs 
+high.expressors <- names(which(apply(lps.3prime.mus[,1:imax]>mu.high.cutoff.3prime,1,sum)==imax))
+constitutive.3prime.ps <- setdiff(high.expressors,lps.6hr.3prime.ps)
 ```
 
 Exon
 ```{r}
-mu.high.cutoff <- abs.cutoff
-high.expressors <- names(which(apply(dm.lps.exon[,1:nt]>mu.high.cutoff,1,sum)==nt))
-constitutive.exon.ps <- setdiff(high.expressors,diffexp.exon.ps)
+mu.high.cutoff.exon <- dec.comp["90%"] * mu.high.cutoff.3prime
+imax <- 5 ## imax=5 <-> 6 hrs 
+high.expressors <- names(which(apply(lps.exon.mus[,1:imax]>mu.high.cutoff.exon,1,sum)==imax))
+constitutive.exon.ps <- setdiff(high.expressors,lps.6hr.exon.ps)
 ```
-
 
 ```{r}
 compareSets(intersect(constitutive.3prime.ps,onboth.ps),intersect(constitutive.exon.ps,onboth.ps))
